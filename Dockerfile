@@ -36,8 +36,9 @@ RUN rm -rf /root/.bash_it \
     && touch /root/.zshrc \
     && touch /root/.bashrc \
     && cd /root \
-    && git clone https://github.com/Bash-it/bash-it.git /root/bash_it \
-    && git clone https://github.com/robbyrussell/oh-my-zsh.git /root/oh-my-zsh \
+    && git clone git@github.com:Bash-it/bash-it.git /root/bash_it \
+    && git clone git@github.com:speedenator/agnoster-bash.git /root/bash_it/themes/agnoster-bash \
+    && git clone git@github.com:robbyrussell/oh-my-zsh.git /root/oh-my-zsh \
     && mv /root/bash_it /root/.bash_it \
     && mv /root/oh-my-zsh /root/.oh-my-zsh
 
@@ -45,8 +46,8 @@ RUN rm -rf /root/.bash_it \
 RUN rm -rf /tmp/tmux \
     && rm -rf /root/.tmux/plugins/tpm \
     && touch /root/.tmux.conf \
-    && git clone https://github.com/tmux-plugins/tpm.git /root/tmux/plugins/tpm \
-    && git clone https://github.com/tmux/tmux.git /tmp/tmux \
+    && git clone git@github.com:tmux-plugins/tpm.git /root/tmux/plugins/tpm \
+    && git clone git@github.com:tmux/tmux.git /tmp/tmux \
     && mv /root/tmux /root/.tmux
 
 ## INSTALL tmux
@@ -57,7 +58,7 @@ RUN cd /tmp/tmux \
     && sudo make install
 
 ## DOWNLOAD vim
-RUN git clone https://github.com/vim/vim.git /root/vim
+RUN git clone git@github.com:vim/vim.git /root/vim
 
 ## INSTALL vim
 RUN cd /root/vim/src \
@@ -71,13 +72,13 @@ RUN cd /root/vim/src \
     && /bin/sh step02.sh
 
 ## DOWNLOAD & INSTALL vim themes
-RUN git clone https://github.com/dracula/dracula-theme.git /tmp/themes/dracula-theme --recursive \
-    && git clone https://github.com/blueshirts/darcula.git /tmp/themes/darcula --recursive \
+RUN git clone git@github.com:dracula/dracula-theme.git /tmp/themes/dracula-theme --recursive \
+    && git clone git@github.com:blueshirts/darcula.git /tmp/themes/darcula --recursive \
     && sudo cp /tmp/themes/dracula-theme/vim/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
     && sudo cp /tmp/themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
 
 ## DOWNLOAD & INSTALL dircolors
-RUN git clone https://github.com/sigurdga/gnome-terminal-colors-solarized.git /root/solarized \
+RUN git clone git@github.com:sigurdga/gnome-terminal-colors-solarized.git /root/solarized \
     && mv /root/solarized /root/.solarized
 
 COPY rootfs/ /
