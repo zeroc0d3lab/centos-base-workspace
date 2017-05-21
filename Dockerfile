@@ -36,8 +36,8 @@ RUN rm -rf /root/.bash_it \
     && touch /root/.zshrc \
     && touch /root/.bashrc \
     && cd /root \
-    && git clone https://github.com/Bash-it/bash-it /root/bash_it \
-    && git clone https://github.com/robbyrussell/oh-my-zsh /root/oh-my-zsh \
+    && git clone https://github.com/Bash-it/bash-it.git /root/bash_it \
+    && git clone https://github.com/robbyrussell/oh-my-zsh.git /root/oh-my-zsh \
     && mv /root/bash_it /root/.bash_it \
     && mv /root/oh-my-zsh /root/.oh-my-zsh
 
@@ -45,7 +45,7 @@ RUN rm -rf /root/.bash_it \
 RUN rm -rf /tmp/tmux \
     && rm -rf /root/.tmux/plugins/tpm \
     && touch /root/.tmux.conf \
-    && git clone https://github.com/tmux-plugins/tpm /root/tmux/plugins/tpm \
+    && git clone https://github.com/tmux-plugins/tpm.git /root/tmux/plugins/tpm \
     && git clone https://github.com/tmux/tmux.git /tmp/tmux \
     && mv /root/tmux /root/.tmux
 
