@@ -34,7 +34,6 @@ RUN rm -rf /root/.bash_it \
     && rm -rf /root/.oh-my-zsh \
     && touch /root/.bashrc \
     && touch /root/.zshrc \
-    && touch /root/.bashrc \
     && cd /root \
     && git clone git@github.com:Bash-it/bash-it.git /root/bash_it \
     && git clone git@github.com:speedenator/agnoster-bash.git /root/bash_it/themes/agnoster-bash \
