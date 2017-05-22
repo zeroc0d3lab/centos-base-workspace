@@ -1,5 +1,5 @@
-FROM zeroc0d3/centos-base:latest
-MAINTAINER ZeroC0D3 Team <zeroc0d3.0912@gmail.com>
+FROM zeroc0d3lab/centos-base:latest
+MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 
 ENV CONSULTEMPLATE_VERSION=0.18.3
 
