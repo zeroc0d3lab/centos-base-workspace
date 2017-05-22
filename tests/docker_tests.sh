@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DOCKER_IMAGE="zeroc0d3/centos-base-workspace"
+DOCKER_IMAGE="zeroc0d3lab/centos-base-workspace"
 DOCKER_TAG="latest"
 
 #### Halt script on error
