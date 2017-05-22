@@ -19,4 +19,4 @@ Docker CentOS Workspace for multi purpose applications, this workspace image inc
 * composer
 
 ## License
-MIT License
+GNU General Public License v2
