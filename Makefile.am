@@ -1,4 +1,4 @@
-IMAGE = zeroc0d3/centos-base-workspace
+IMAGE = zeroc0d3lab/centos-base-workspace
 
 clean-local:
 	docker rmi $(IMAGE):$(TAG) $(CLEAN_OPTIONS) || true
