@@ -73,7 +73,7 @@ RUN cd /root/vim/src \
 ## DOWNLOAD & INSTALL vim themes
 RUN git clone https://github.com/dracula/vim.git /tmp/themes/dracula \
     && git clone https://github.com/blueshirts/darcula.git /tmp/themes/darcula \
-    && sudo cp /tmp/themes/dracula/vim/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
+    && sudo cp /tmp/themes/dracula/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
     && sudo cp /tmp/themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
 
 ## DOWNLOAD & INSTALL dircolors
