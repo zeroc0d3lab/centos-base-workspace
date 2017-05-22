@@ -71,9 +71,9 @@ RUN cd /root/vim/src \
     && /bin/sh step02.sh
 
 ## DOWNLOAD & INSTALL vim themes
-RUN git clone https://github.com/dracula/dracula-theme.git /tmp/themes/dracula-theme --recursive \
-    && git clone https://github.com/blueshirts/darcula.git /tmp/themes/darcula --recursive \
-    && sudo cp /tmp/themes/dracula-theme/vim/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
+RUN git clone https://github.com/dracula/vim.git /tmp/themes/dracula-theme \
+    && git clone https://github.com/blueshirts/darcula.git /tmp/themes/darcula \
+    && sudo cp /tmp/themes/dracula/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
     && sudo cp /tmp/themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
 
 ## DOWNLOAD & INSTALL dircolors
