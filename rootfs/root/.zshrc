@@ -86,3 +86,20 @@ source $ZSH/oh-my-zsh.sh
 
 # set PATH so it includes user's private bin directories
 PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+### rbenv (Ruby) default ###
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
+#export RAILS_ENV=staging
+
+### rvm (Ruby) - alternative ###
+# export PATH="$PATH:$HOME/.rvm/bin"
+# source $HOME/.rvm/scripts/rvm
+# export PATH="$PATH:$HOME/.rvm/bin"
+# source $HOME/.rvm/scripts/rvm
+# export PATH="$PATH:$HOME/.rvm/bin" 
+# source $HOME/.rvm/scripts/rvm 
+
+# Set PATH alternatives using this:
+# [[ -s "$HOME/.rvm/scripts/rvm"  ]] && source "$HOME/.rvm/scripts/rvm"
