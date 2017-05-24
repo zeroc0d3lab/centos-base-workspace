@@ -122,7 +122,7 @@ RUN wget http://git.savannah.gnu.org/cgit/emacs.git/snapshot/emacs-25.1.tar.gz \
     && git clone https://github.com/syl20bnr/spacemacs /root/.emacs.d 
 
 ## INSTALL spacemacs
-RUN tar zxvf emacs-25.1.tar.gz \
+RUN ./usr/lib/tar zxvf emacs-25.1.tar.gz \
     && cd /root/emacs-25.1 \
     && /bin/sh autogen.sh \
     && /bin/sh ./configure --without-makeinfo \
