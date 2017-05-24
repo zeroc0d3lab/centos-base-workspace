@@ -8,7 +8,6 @@ Docker CentOS Workspace for multi purpose applications, this workspace image inc
 * oh-my-zsh (+ themes)
 * tmux (+ themes)
 * vim (+ plugins with vundle & themes)
-* spacemacs
 
 ## Todo:
 - [X] rbenv / rvm

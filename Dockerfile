@@ -31,21 +31,6 @@ RUN yum -y install git \
     && unzip /tmp/consul-template.zip -d /bin \
     && rm -f /tmp/consul-template.zip
 
-## INSTALL EMACS DEPENDENCY
-RUN yum -y install libXpm-devel \
-         libjpeg-turbo-devel \
-         openjpeg-devel \
-         openjpeg2-devel \
-         turbojpeg-devel \
-         giflib-devel \
-         libtiff-devel \
-         gnutls-devel \
-         libxml2-devel \
-         GConf2-devel \
-         dbus-devel \
-         wxGTK-devel \
-         gtk3-devel
-
 ## INSTALL RUBY DEPENDENCY ##
 RUN yum -y install git-core \
          zlib \ 
@@ -116,19 +101,6 @@ RUN git clone https://github.com/dracula/vim.git /tmp/themes/dracula \
     && git clone https://github.com/blueshirts/darcula.git /tmp/themes/darcula \
     && sudo cp /tmp/themes/dracula/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
     && sudo cp /tmp/themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
-
-## DOWNLOAD spacemacs
-RUN cd /tmp \
-    && wget http://git.savannah.gnu.org/cgit/emacs.git/snapshot/emacs-25.1.tar.gz \
-    && git clone https://github.com/syl20bnr/spacemacs /root/.emacs.d 
-
-## INSTALL spacemacs
-RUN cd /tmp \
-    && ./bin/tar zxvf emacs-25.1.tar.gz \
-    && cd /tmp/emacs-25.1 \
-    && /bin/sh autogen.sh \
-    && /bin/sh ./configure --without-makeinfo \
-    && sudo make install
 
 ## INSTALL ruby ##
 # - copy .zshrc & .bashrc for installation
