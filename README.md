@@ -15,10 +15,10 @@ Docker CentOS Workspace for multi purpose applications, this workspace image inc
 - [X] gem test unit (rspec, serverspec)
 - [X] gem docker-api
 - [X] gem postgresql (sequel_pg), sqlite3, mysql2, mongoid, sequel, apktools
-- [] npm
-- [] npm test unit (ChaiJS, TV4, Newman)
-- [] yarn
-- [] composer
+- [ ] npm
+- [ ] npm test unit (ChaiJS, TV4, Newman)
+- [ ] yarn
+- [ ] composer
 
 ## License
 GNU General Public License v2
