@@ -118,12 +118,14 @@ RUN git clone https://github.com/dracula/vim.git /tmp/themes/dracula \
     && sudo cp /tmp/themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
 
 ## DOWNLOAD spacemacs
-RUN wget http://git.savannah.gnu.org/cgit/emacs.git/snapshot/emacs-25.1.tar.gz \
+RUN cd /tmp \
+    && wget http://git.savannah.gnu.org/cgit/emacs.git/snapshot/emacs-25.1.tar.gz \
     && git clone https://github.com/syl20bnr/spacemacs /root/.emacs.d 
 
 ## INSTALL spacemacs
-RUN ./usr/lib/tar zxvf emacs-25.1.tar.gz \
-    && cd /root/emacs-25.1 \
+RUN cd /tmp \
+    && ./bin/tar zxvf emacs-25.1.tar.gz \
+    && cd /tmp/emacs-25.1 \
     && /bin/sh autogen.sh \
     && /bin/sh ./configure --without-makeinfo \
     && sudo make install
