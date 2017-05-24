@@ -1,30 +1,71 @@
 FROM zeroc0d3lab/centos-base:latest
 MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 
-ENV CONSULTEMPLATE_VERSION=0.18.3
+## SET ENVIRONMENT ##
+ENV CONSULTEMPLATE_VERSION=0.18.3 \
+    RUBY_VERSION=2.4.1
 
 RUN mkdir -p /var/lib/consul \
     && groupadd consul \
     && useradd -r -g consul consul \
     && chown -R consul:consul /var/lib/consul
 
+## FIND FASTEST REPO & UPDATE REPO ##
 RUN yum makecache fast \
-    && yum -y update \
-    && yum -y install git \
-            nano \
-            zip \
-            unzip \
-            zsh \
-            gcc \
-            automake \
-            make \
-            libevent-devel \
-            ncurses-devel \
-            glibc-static \
+    && yum -y update 
+
+## INSTALL WORKSPACE DEPENDENCY ##
+RUN yum -y install git \
+         nano \
+         zip \
+         unzip \
+         zsh \
+         gcc \
+         automake \
+         make \
+         libevent-devel \
+         ncurses-devel \
+         glibc-static \
 
     && curl -sSL https://releases.hashicorp.com/consul-template/${CONSULTEMPLATE_VERSION}/consul-template_${CONSULTEMPLATE_VERSION}_linux_amd64.zip -o /tmp/consul-template.zip \
     && unzip /tmp/consul-template.zip -d /bin \
-    && rm -f /tmp/consul-template.zip \
+    && rm -f /tmp/consul-template.zip
+
+## INSTALL EMACS DEPENDENCY
+RUN yum -y install libXpm-devel \
+         libjpeg-turbo-devel \
+         openjpeg-devel \
+         openjpeg2-devel \
+         turbojpeg-devel \
+         giflib-devel \
+         libtiff-devel \
+         gnutls-devel \
+         libxml2-devel \
+         GConf2-devel \
+         dbus-devel \
+         wxGTK-devel \
+         gtk3-devel
+
+## INSTALL RUBY DEPENDENCY ##
+RUN yum -y install git-core \
+         zlib \ 
+         zlib-devel \
+         gcc-c++ \
+         patch \ 
+         readline \
+         readline-devel \
+         libyaml-devel \
+         libffi-devel \
+         openssl-devel \
+         make \
+         bzip2 \
+         bison \
+         autoconf \
+         automake \
+         libtool \
+         sqlite-devel \
+
+## CLEAN UP ALL CACHE ##
     && yum clean all
 
 ## DOWNLOAD & INSTALL
@@ -76,17 +117,69 @@ RUN git clone https://github.com/dracula/vim.git /tmp/themes/dracula \
     && sudo cp /tmp/themes/dracula/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
     && sudo cp /tmp/themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
 
-## DOWNLOAD & INSTALL dircolors
-RUN git clone https://github.com/sigurdga/gnome-terminal-colors-solarized.git /root/solarized \
-    && mv /root/solarized /root/.solarized
+## DOWNLOAD spacemacs
+RUN cd /root \
+    wget http://git.savannah.gnu.org/cgit/emacs.git/snapshot/emacs-25.1.tar.gz \
+    && git clone https://github.com/syl20bnr/spacemacs /root/.emacs.d 
 
+## INSTALL spacemacs
+RUN cd /root \
+    && tar zxvf emacs-25.1.tar.gz \
+    && cd emacs-25.1 \
+    && /bin/sh autogen.sh \
+    && /bin/sh ./configure --without-makeinfo \
+    && sudo make install
+
+## INSTALL ruby ##
+# - copy .zshrc & .bashrc for installation
+COPY ./rootfs/root/.zshrc /root/.zshrc
+COPY ./rootfs/root/.bashrc /root/.bashrc
+
+## INSTALL  rbenv (default) ##
+RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv \
+    && git clone https://github.com/rbenv/ruby-build.git /root/.rbenv/plugins/ruby-build \
+    && ./root/.rbenv/bin/rbenv install ${RUBY_VERSION} \
+    && ./root/.rbenv/bin/rbenv global ${RUBY_VERSION} \
+    && ./root/.rbenv/bin/rbenv rehash \
+    && ./root/.rbenv/shims/ruby -v
+
+## INSTALL rvm (alternatives) ##
+# RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 \
+#     && curl -sSL https://get.rvm.io | bash -s stable \
+#     && ./root/.rvm/scripts/rvm install ${RUBY_VERSION} \
+#     && ./root/.rvm/scripts/rvm use ${RUBY_VERSION} --default
+#     && ./usr/bin/ruby -v
+
+## INSTALL bundler, rails, docker-api & other ruby packages
+RUN ./root/.rbenv/shims/gem install bundler \
+    && ./root/.rbenv/shims/gem install rails \
+    && ./root/.rbenv/shims/gem install rspec \
+    && ./root/.rbenv/shims/gem install serverspec \
+    && ./root/.rbenv/shims/gem install docker-api \
+    && ./root/.rbenv/shims/gem install sqlite3 \
+    && ./root/.rbenv/shims/gem install mongoid \
+    && ./root/.rbenv/shims/gem install sequel \
+
+##  Skip gems installation
+#   && ./root/.rbenv/shims/gem install pg \
+#   && ./root/.rbenv/shims/gem install mysql2 \
+#   && ./root/.rbenv/shims/gem install sequel_pg \
+
+    && ./root/.rbenv/shims/gem install apktools
+
+## FINALIZE (reconfigure) ##
 COPY rootfs/ /
 
+## CHECK DOCKER CONTAINER ##
 HEALTHCHECK CMD /etc/cont-consul/check || exit 1
 
+## SET PORT ##
 EXPOSE 22
 
+## SET VOLUME ##
 VOLUME ["/sys/fs/cgroup", "/tmp"]
+
+## RUN INIT ##
 CMD ["/usr/sbin/init"]
 
 ## NOTE:
