@@ -7,16 +7,18 @@ Docker CentOS Workspace for multi purpose applications, this workspace image inc
 * bash (+ themes)
 * oh-my-zsh (+ themes)
 * tmux (+ themes)
-* vim (+ plugins & themes)
+* vim (+ plugins with vundle & themes)
+* spacemacs
 
 ## Todo:
-* rbenv / rvm
-* ruby test unit (rspec, serverspec)
-* ruby docker-api
-* npm
-* npm test unit (ChaiJS, TV4, Newman)
-* yarn
-* composer
+- [X] rbenv / rvm
+- [X] gem test unit (rspec, serverspec)
+- [X] gem docker-api
+- [X] gem postgresql (sequel_pg), sqlite3, mysql2, mongoid, sequel, apktools
+- [] npm
+- [] npm test unit (ChaiJS, TV4, Newman)
+- [] yarn
+- [] composer
 
 ## License
 GNU General Public License v2
