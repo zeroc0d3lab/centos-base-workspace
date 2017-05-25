@@ -2,6 +2,8 @@ version: '2'
 
 services:
   base-workspace:
+    build:
+      context: .
     ports:
       - "8300:8300"       # server RPC
       - "8301:8301"       # serf LAN
@@ -20,7 +22,6 @@ services:
       - CONSULUI_VERSION=0.8.3
       - CONSULTEMPLATE_VERSION=0.18.3
       - RUBY_VERSION=2.4.1
-
       - CONSUL_OPTIONS=-server -bootstrap-expect 1 -client 0.0.0.0 -ui    # minimal server options
       - CONSUL_DATACENTER=local                                           # datacenter
       - CONSUL_DOMAIN=test                                                # domain name

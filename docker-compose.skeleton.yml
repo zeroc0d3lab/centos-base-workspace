@@ -2,6 +2,8 @@ version: '2'
 
 services:
   foo:
+    build:
+      context: .
     ports:
       - "1234:1234"
     volumes:
@@ -11,7 +13,6 @@ services:
       - CONSULUI_VERSION=0.8.3
       - CONSULTEMPLATE_VERSION=0.18.3
       - RUBY_VERSION=2.4.1
-      
       #- CONTAINER_RESOLVER=route                                   # IP resolver method for container (route/interface, default: route)
       #- CONTAINER_RESOLVER_INTERFACENAME=eth0                      # network interface name for IP resolver (default: eth0)
       #- CONTAINER_RESOLVER_INTERFACETYPE=inet                      # network interface type for IP resolver (inet/inet6, default: inet)
