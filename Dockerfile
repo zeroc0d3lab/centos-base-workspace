@@ -26,6 +26,7 @@ RUN yum -y install git \
          libevent-devel \
          ncurses-devel \
          glibc-static \
+         nodejs \
 
     && curl -sSL https://releases.hashicorp.com/consul-template/${CONSULTEMPLATE_VERSION}/consul-template_${CONSULTEMPLATE_VERSION}_linux_amd64.zip -o /tmp/consul-template.zip \
     && unzip /tmp/consul-template.zip -d /bin \
@@ -98,8 +99,8 @@ RUN cd /root/vim/src \
     && sudo mkdir /usr/share/vim \
     && sudo mkdir /usr/share/vim/vim80/ \
     && sudo cp -fr /root/vim/runtime/* /usr/share/vim/vim80/ \
-    && wget https://raw.githubusercontent.com/zeroc0d3/vim-ide/master/step02.sh \
-    && /bin/sh step02.sh
+    && git clone https://github.com/zeroc0d3/vim-ide.git /root/vim-ide \
+    && /bin/sh /root/vim-ide/step02.sh
 
 ## DOWNLOAD & INSTALL vim themes
 RUN git clone https://github.com/dracula/vim.git /tmp/themes/dracula \
@@ -136,13 +137,26 @@ RUN ./root/.rbenv/shims/gem install bundler \
     && ./root/.rbenv/shims/gem install sqlite3 \
     && ./root/.rbenv/shims/gem install mongoid \
     && ./root/.rbenv/shims/gem install sequel \
-
-##  Skip gems installation
+##  Skip gems installation (need other containers)
 #   && ./root/.rbenv/shims/gem install pg \
 #   && ./root/.rbenv/shims/gem install mysql2 \
 #   && ./root/.rbenv/shims/gem install sequel_pg \
-
     && ./root/.rbenv/shims/gem install apktools
+
+## INSTALL Javascipt Unit Test
+RUN ./usr/bin/npm install chai \
+    && ./usr/bin/npm install tv4 \
+    && ./usr/bin/npm install newman \
+
+## INSTALL Yarn, Bower, Grunt, Gulp, Yeoman
+    && ./usr/bin/npm install bower \
+    && ./usr/bin/npm install grunt \
+    && ./usr/bin/npm install gulp \
+    && ./usr/bin/npm install yo
+
+## INSTALL Composer
+RUN wget https://getcomposer.org/download/1.4.2/composer.phar -O /usr/local/bin/composer \
+    && sudo chmod +x /usr/local/bin/composer
 
 ## FINALIZE (reconfigure) ##
 COPY rootfs/ /
