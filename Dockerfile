@@ -83,6 +83,10 @@ RUN cd /tmp/tmux \
     && sudo make \
     && sudo make install
 
+## DOWNLOAD & INSTALL dircolors
+RUN git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git /root/solarized \
+    && mv /root/solarized /root/.solarized
+
 ## DOWNLOAD vim
 RUN git clone https://github.com/vim/vim.git /root/vim
 
