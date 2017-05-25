@@ -34,7 +34,7 @@ RUN yum -y install git \
     && unzip /tmp/consul.zip -d /bin \
     && rm /tmp/consul.zip \
     && mkdir -p /var/lib/consului \
-    && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_web_ui.zip -o /tmp/consului.zip && \
+    && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_web_ui.zip -o /tmp/consului.zip \
     && unzip /tmp/consului.zip -d /var/lib/consului \
     && rm /tmp/consului.zip \
     && curl -sSL https://releases.hashicorp.com/consul-template/${CONSULTEMPLATE_VERSION}/consul-template_${CONSULTEMPLATE_VERSION}_linux_amd64.zip -o /tmp/consul-template.zip \
