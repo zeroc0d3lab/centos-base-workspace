@@ -73,6 +73,7 @@ RUN rm -rf /tmp/tmux \
     && touch /root/.tmux.conf \
     && git clone https://github.com/tmux-plugins/tpm.git /root/tmux/plugins/tpm \
     && git clone https://github.com/tmux/tmux.git /tmp/tmux \
+    && git clone https://github.com/seebi/tmux-colors-solarized.git /root/tmux-colors-solarized \
     && mv /root/tmux /root/.tmux
 
 ## INSTALL tmux
