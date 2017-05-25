@@ -2,7 +2,9 @@ FROM zeroc0d3lab/centos-base:latest
 MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 
 ## SET ENVIRONMENT ##
-ENV CONSULTEMPLATE_VERSION=0.18.3 \
+ENV CONSUL_VERSION=0.8.3 \
+    CONSULUI_VERSION=0.8.3 \
+    CONSULTEMPLATE_VERSION=0.18.3 \
     RUBY_VERSION=2.4.1
 
 RUN mkdir -p /var/lib/consul \
@@ -12,7 +14,7 @@ RUN mkdir -p /var/lib/consul \
 
 ## FIND FASTEST REPO & UPDATE REPO ##
 RUN yum makecache fast \
-    && yum -y update 
+    && yum -y update
 
 ## INSTALL WORKSPACE DEPENDENCY ##
 RUN yum -y install git \
@@ -28,16 +30,23 @@ RUN yum -y install git \
          glibc-static \
          nodejs \
 
+    && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_linux_amd64.zip -o /tmp/consul.zip \
+    && unzip /tmp/consul.zip -d /bin \
+    && rm /tmp/consul.zip \
+    && mkdir -p /var/lib/consului \
+    && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_web_ui.zip -o /tmp/consului.zip && \
+    && unzip /tmp/consului.zip -d /var/lib/consului \
+    && rm /tmp/consului.zip \
     && curl -sSL https://releases.hashicorp.com/consul-template/${CONSULTEMPLATE_VERSION}/consul-template_${CONSULTEMPLATE_VERSION}_linux_amd64.zip -o /tmp/consul-template.zip \
     && unzip /tmp/consul-template.zip -d /bin \
     && rm -f /tmp/consul-template.zip
 
 ## INSTALL RUBY DEPENDENCY ##
 RUN yum -y install git-core \
-         zlib \ 
+         zlib \
          zlib-devel \
          gcc-c++ \
-         patch \ 
+         patch \
          readline \
          readline-devel \
          libyaml-devel \
@@ -161,17 +170,19 @@ RUN wget https://getcomposer.org/download/1.4.2/composer.phar -O /usr/local/bin/
 ## FINALIZE (reconfigure) ##
 COPY rootfs/ /
 
-## CHECK DOCKER CONTAINER ##
-HEALTHCHECK CMD /etc/cont-consul/check || exit 1
+## RUN INIT ##
+ENTRYPOINT ["/init"]
+CMD []
 
 ## SET PORT ##
-EXPOSE 22
+EXPOSE 8300 8301 8301/udp 8302 8302/udp 8400 8500 8501 8600 8600/udp
 
 ## SET VOLUME ##
-VOLUME ["/sys/fs/cgroup", "/tmp"]
+VOLUME ["/var/lib/consul"]
 
-## RUN INIT ##
-CMD ["/usr/sbin/init"]
+## CHECK DOCKER CONTAINER ##
+HEALTHCHECK CMD /etc/cont-consul/check || exit 1
+HEALTHCHECK CMD [ $(curl -sI -w '%{http_code}' --out /dev/null http://localhost:8500/v1/agent/self) == "200" ] || exit 1
 
 ## NOTE:
 ## *) Run vim then >> :PluginInstall
