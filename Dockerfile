@@ -167,6 +167,9 @@ RUN ./usr/bin/npm install chai \
 RUN wget https://getcomposer.org/download/1.4.2/composer.phar -O /usr/local/bin/composer \
     && sudo chmod +x /usr/local/bin/composer
 
+## SETUP LOCALE ##
+RUN ["/usr/bin/localedef", "-i", "en_US", "-f", "UTF-8", "en_US.UTF-8"]
+
 ## FINALIZE (reconfigure) ##
 COPY rootfs/ /
 
