@@ -41,6 +41,9 @@ RUN yum -y install \
          ncurses-devel \
          glibc-static \
          nodejs \
+         mysql-devel \
+         postgresql-libs \
+         postgresql-devel \
 
     && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_linux_amd64.zip -o /tmp/consul.zip \
     && unzip /tmp/consul.zip -d /bin \
@@ -183,10 +186,9 @@ RUN ./root/.rbenv/shims/gem install bundler \
     && ./root/.rbenv/shims/gem install sqlite3 \
     && ./root/.rbenv/shims/gem install mongoid \
     && ./root/.rbenv/shims/gem install sequel \
-##  Skip gems installation (need other containers)
-#   && ./root/.rbenv/shims/gem install pg \
-#   && ./root/.rbenv/shims/gem install mysql2 \
-#   && ./root/.rbenv/shims/gem install sequel_pg \
+    && ./root/.rbenv/shims/gem install pg \
+    && ./root/.rbenv/shims/gem install mysql2 \
+    && ./root/.rbenv/shims/gem install sequel_pg \
     && ./root/.rbenv/shims/gem install apktools
 
 #-----------------------------------------------------------------------------
