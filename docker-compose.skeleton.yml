@@ -2,13 +2,13 @@ version: '2'
 
 services:
   base-workspace:
-    build:
-      context: .
+    image: zeroc0d3lab/centos-base-workspace
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      #- /host/data:/var/consul                # volume for data
+      #- /host/data:/var/consul                       # volume for data
     environment:
-      - CONSUL_VERSION=0.8.3
-      - CONSULUI_VERSION=0.8.3
-      - CONSULTEMPLATE_VERSION=0.18.3
-      - RUBY_VERSION=2.4.1
+      - CONSUL_VERSION=${CONSUL_VERSION}
+      - CONSULUI_VERSION=${CONSULUI_VERSION}
+      - CONSULTEMPLATE_VERSION=${CONSULTEMPLATE_VERSION}
+      - RUBY_VERSION=${RUBY_VERSION}
+
