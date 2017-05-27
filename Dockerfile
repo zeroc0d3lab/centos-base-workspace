@@ -1,23 +1,35 @@
 FROM zeroc0d3lab/centos-base:latest
 MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 
-## SET ENVIRONMENT ##
+#-----------------------------------------------------------------------------
+# Set Environment
+#-----------------------------------------------------------------------------
 ENV CONSUL_VERSION=0.8.3 \
     CONSULUI_VERSION=0.8.3 \
     CONSULTEMPLATE_VERSION=0.18.3 \
     RUBY_VERSION=2.4.1
 
+#-----------------------------------------------------------------------------
+# Set Group & User for 'consul'
+#-----------------------------------------------------------------------------
 RUN mkdir -p /var/lib/consul \
     && groupadd consul \
     && useradd -r -g consul consul \
     && chown -R consul:consul /var/lib/consul
 
-## FIND FASTEST REPO & UPDATE REPO ##
+#-----------------------------------------------------------------------------
+# Find Fastest Repo & Update Repo
+#-----------------------------------------------------------------------------
 RUN yum makecache fast \
     && yum -y update
 
-## INSTALL WORKSPACE DEPENDENCY ##
-RUN yum -y install git \
+#-----------------------------------------------------------------------------
+# Install Workspace Dependency
+#-----------------------------------------------------------------------------
+RUN yum -y install \
+           --setopt=tsflags=nodocs \
+           --disableplugin=fastestmirror \
+         git \
          nano \
          zip \
          unzip \
@@ -41,8 +53,13 @@ RUN yum -y install git \
     && unzip /tmp/consul-template.zip -d /bin \
     && rm -f /tmp/consul-template.zip
 
-## INSTALL RUBY DEPENDENCY ##
-RUN yum -y install git-core \
+#-----------------------------------------------------------------------------
+# Install Ruby Dependency
+#-----------------------------------------------------------------------------
+RUN yum -y install \
+           --setopt=tsflags=nodocs \
+           --disableplugin=fastestmirror \
+         git-core \
          zlib \
          zlib-devel \
          gcc-c++ \
@@ -60,12 +77,16 @@ RUN yum -y install git-core \
          libtool \
          sqlite-devel \
 
-## CLEAN UP ALL CACHE ##
+#-----------------------------------------------------------------------------
+# Clean Up All Cache
+#-----------------------------------------------------------------------------
     && yum clean all
 
-## DOWNLOAD & INSTALL
-## - bash_it (bash + themes)
-## - oh-my-zsh (zsh + themes)
+#-----------------------------------------------------------------------------
+# Download & Install
+# -) bash_it (bash + themes)
+# -) oh-my-zsh (zsh + themes)
+#-----------------------------------------------------------------------------
 RUN rm -rf /root/.bash_it \
     && rm -rf /root/.oh-my-zsh \
     && touch /root/.bashrc \
@@ -77,7 +98,10 @@ RUN rm -rf /root/.bash_it \
     && mv /root/bash_it /root/.bash_it \
     && mv /root/oh-my-zsh /root/.oh-my-zsh
 
-## DOWNLOAD tmux + themes
+#-----------------------------------------------------------------------------
+# Download & Install
+# -) tmux + themes
+#-----------------------------------------------------------------------------
 RUN rm -rf /tmp/tmux \
     && rm -rf /root/.tmux/plugins/tpm \
     && touch /root/.tmux.conf \
@@ -86,21 +110,26 @@ RUN rm -rf /tmp/tmux \
     && git clone https://github.com/seebi/tmux-colors-solarized.git /root/tmux-colors-solarized \
     && mv /root/tmux /root/.tmux
 
-## INSTALL tmux
 RUN cd /tmp/tmux \
     && /bin/sh autogen.sh \
     && /bin/sh ./configure \
     && sudo make \
     && sudo make install
 
-## DOWNLOAD & INSTALL dircolors
+#-----------------------------------------------------------------------------
+# Download & Install
+# -) dircolors (terminal colors)
+#-----------------------------------------------------------------------------
 RUN git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git /root/solarized \
     && mv /root/solarized /root/.solarized
 
-## DOWNLOAD vim
+#-----------------------------------------------------------------------------
+# Download & Install
+# -) vim
+# -) vundle + themes
+#-----------------------------------------------------------------------------
 RUN git clone https://github.com/vim/vim.git /root/vim
 
-## INSTALL vim
 RUN cd /root/vim/src \
     && /bin/sh ./configure \
     && sudo make \
@@ -111,18 +140,22 @@ RUN cd /root/vim/src \
     && git clone https://github.com/zeroc0d3/vim-ide.git /root/vim-ide \
     && /bin/sh /root/vim-ide/step02.sh
 
-## DOWNLOAD & INSTALL vim themes
 RUN git clone https://github.com/dracula/vim.git /tmp/themes/dracula \
     && git clone https://github.com/blueshirts/darcula.git /tmp/themes/darcula \
     && sudo cp /tmp/themes/dracula/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
     && sudo cp /tmp/themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
 
-## INSTALL ruby ##
-# - copy .zshrc & .bashrc for installation
+#-----------------------------------------------------------------------------
+# Prepare Installation Ruby
+# -) copy .zshrc to /root
+# -) copy .bashrc to /root
+#-----------------------------------------------------------------------------
 COPY ./rootfs/root/.zshrc /root/.zshrc
 COPY ./rootfs/root/.bashrc /root/.bashrc
 
-## INSTALL  rbenv (default) ##
+#-----------------------------------------------------------------------------
+# Installation Ruby with rbenv (default)
+#-----------------------------------------------------------------------------
 RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv \
     && git clone https://github.com/rbenv/ruby-build.git /root/.rbenv/plugins/ruby-build \
     && ./root/.rbenv/bin/rbenv install ${RUBY_VERSION} \
@@ -130,14 +163,18 @@ RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv \
     && ./root/.rbenv/bin/rbenv rehash \
     && ./root/.rbenv/shims/ruby -v
 
-## INSTALL rvm (alternatives) ##
+#-----------------------------------------------------------------------------
+# Installation Ruby with rvm (alternatives)
+#-----------------------------------------------------------------------------
 # RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 \
 #     && curl -sSL https://get.rvm.io | bash -s stable \
 #     && ./root/.rvm/scripts/rvm install ${RUBY_VERSION} \
 #     && ./root/.rvm/scripts/rvm use ${RUBY_VERSION} --default
 #     && ./usr/bin/ruby -v
 
-## INSTALL bundler, rails, docker-api & other ruby packages
+#-----------------------------------------------------------------------------
+# Installation Ruby Packages
+#-----------------------------------------------------------------------------
 RUN ./root/.rbenv/shims/gem install bundler \
     && ./root/.rbenv/shims/gem install rails \
     && ./root/.rbenv/shims/gem install rspec \
@@ -152,28 +189,40 @@ RUN ./root/.rbenv/shims/gem install bundler \
 #   && ./root/.rbenv/shims/gem install sequel_pg \
     && ./root/.rbenv/shims/gem install apktools
 
-## INSTALL Javascipt Unit Test
+#-----------------------------------------------------------------------------
+# Installation Javascipt Unit Test
+#-----------------------------------------------------------------------------
 RUN ./usr/bin/npm install chai \
     && ./usr/bin/npm install tv4 \
     && ./usr/bin/npm install newman \
 
-## INSTALL Yarn, Bower, Grunt, Gulp, Yeoman
+#-----------------------------------------------------------------------------
+# Installation Javascipt Packages Manager
+#-----------------------------------------------------------------------------
     && ./usr/bin/npm install bower \
     && ./usr/bin/npm install grunt \
     && ./usr/bin/npm install gulp \
     && ./usr/bin/npm install yo
 
-## INSTALL Composer
+#-----------------------------------------------------------------------------
+# Installation Composer PHP Packages Manager
+#-----------------------------------------------------------------------------
 RUN wget https://getcomposer.org/download/1.4.2/composer.phar -O /usr/local/bin/composer \
     && sudo chmod +x /usr/local/bin/composer
 
-## SETUP LOCALE ##
+#-----------------------------------------------------------------------------
+# Setup Locale UTF-8
+#-----------------------------------------------------------------------------
 RUN ["/usr/bin/localedef", "-i", "en_US", "-f", "UTF-8", "en_US.UTF-8"]
 
-## FINALIZE (reconfigure) ##
+#-----------------------------------------------------------------------------
+# Finalize (reconfigure)
+#-----------------------------------------------------------------------------
 COPY rootfs/ /
 
-## RUN INIT ##
+#-----------------------------------------------------------------------------
+# Run Init Docker Container
+#-----------------------------------------------------------------------------
 ENTRYPOINT ["/init"]
 CMD []
 
