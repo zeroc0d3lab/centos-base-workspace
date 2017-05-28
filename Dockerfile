@@ -240,7 +240,7 @@ RUN ./usr/bin/npm install chai \
 #-----------------------------------------------------------------------------
 # Upgrade Javascipt Packages Manager
 #-----------------------------------------------------------------------------
-    && ./usr/bin/npm upgrade --global yarn
+    && ./usr/bin/npm upgrade --global yarn \
     && ./usr/bin/npm upgrade --global bower \
     && ./usr/bin/npm upgrade --global grunt \
     && ./usr/bin/npm upgrade --global gulp \
