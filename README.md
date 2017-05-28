@@ -12,7 +12,8 @@ Docker CentOS Workspace for multi purpose applications, this workspace image inc
   - [X] gem test unit (rspec, serverspec)
   - [X] gem docker-api
   - [X] gem sqlite3, mongoid, sequel, apktools
-  - [ ] gem pg, mysql2, sequel_pg (need other containers)
+  - [X] gem mysql2 (run: yum install -y mysql-devel)
+  - [X] gem pg, sequel_pg (run: yum install -y postgresql-libs postgresql-devel)
 * npm
   - [X] npm test unit (ChaiJS, TV4, Newman)
 * js package manager
