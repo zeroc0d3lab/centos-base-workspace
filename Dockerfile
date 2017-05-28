@@ -41,9 +41,23 @@ RUN yum -y install \
          ncurses-devel \
          glibc-static \
          nodejs \
+
+#-----------------------------------------------------------------------------
+# Install MySQL (MariaDB) Library
+#-----------------------------------------------------------------------------
          mysql-devel \
+
+#-----------------------------------------------------------------------------
+# Install PostgreSQL Library
+#-----------------------------------------------------------------------------
+### PostgreSQL 9.2 (default)###
          postgresql-libs \
          postgresql-devel \
+
+### PostgreSQL 9.6 ###
+#   && wget https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm -O /tmp/pgdg-9.6-3.rpm \
+#   && rpm -ivh /tmp/pgdg-9.6-3.rpm \
+#   && yum install -y postgresql96-server postgresql96-devel \
 
     && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_linux_amd64.zip -o /tmp/consul.zip \
     && unzip /tmp/consul.zip -d /bin \
@@ -149,7 +163,7 @@ RUN git clone https://github.com/dracula/vim.git /tmp/themes/dracula \
     && sudo cp /tmp/themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
 
 #-----------------------------------------------------------------------------
-# Prepare Installation Ruby
+# Prepare Install Ruby
 # -) copy .zshrc to /root
 # -) copy .bashrc to /root
 #-----------------------------------------------------------------------------
@@ -157,7 +171,7 @@ COPY ./rootfs/root/.zshrc /root/.zshrc
 COPY ./rootfs/root/.bashrc /root/.bashrc
 
 #-----------------------------------------------------------------------------
-# Installation Ruby with rbenv (default)
+# Install Ruby with rbenv (default)
 #-----------------------------------------------------------------------------
 RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv \
     && git clone https://github.com/rbenv/ruby-build.git /root/.rbenv/plugins/ruby-build \
@@ -167,7 +181,7 @@ RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv \
     && ./root/.rbenv/shims/ruby -v
 
 #-----------------------------------------------------------------------------
-# Installation Ruby with rvm (alternatives)
+# Install Ruby with rvm (alternatives)
 #-----------------------------------------------------------------------------
 # RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 \
 #     && curl -sSL https://get.rvm.io | bash -s stable \
@@ -176,7 +190,7 @@ RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv \
 #     && ./usr/bin/ruby -v
 
 #-----------------------------------------------------------------------------
-# Installation Ruby Packages
+# Install Ruby Packages
 #-----------------------------------------------------------------------------
 RUN ./root/.rbenv/shims/gem install bundler \
     && ./root/.rbenv/shims/gem install rails \
@@ -192,14 +206,14 @@ RUN ./root/.rbenv/shims/gem install bundler \
     && ./root/.rbenv/shims/gem install apktools
 
 #-----------------------------------------------------------------------------
-# Installation Javascipt Unit Test
+# Install Javascipt Unit Test
 #-----------------------------------------------------------------------------
 RUN ./usr/bin/npm install chai \
     && ./usr/bin/npm install tv4 \
     && ./usr/bin/npm install newman \
 
 #-----------------------------------------------------------------------------
-# Installation Javascipt Packages Manager
+# Install Javascipt Packages Manager
 #-----------------------------------------------------------------------------
     && ./usr/bin/npm install bower \
     && ./usr/bin/npm install grunt \
@@ -207,7 +221,7 @@ RUN ./usr/bin/npm install chai \
     && ./usr/bin/npm install yo
 
 #-----------------------------------------------------------------------------
-# Installation Composer PHP Packages Manager
+# Install Composer PHP Packages Manager
 #-----------------------------------------------------------------------------
 RUN wget https://getcomposer.org/download/1.4.2/composer.phar -O /usr/local/bin/composer \
     && sudo chmod +x /usr/local/bin/composer
