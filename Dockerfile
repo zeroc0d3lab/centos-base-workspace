@@ -190,7 +190,7 @@ RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv \
 #     && ./usr/bin/ruby -v
 
 #-----------------------------------------------------------------------------
-# Install Ruby Packages
+# Install Ruby Packages (rbenv)
 #-----------------------------------------------------------------------------
 RUN ./root/.rbenv/shims/gem install bundler \
     && ./root/.rbenv/shims/gem install rails \
@@ -206,6 +206,22 @@ RUN ./root/.rbenv/shims/gem install bundler \
     && ./root/.rbenv/shims/gem install apktools
 
 #-----------------------------------------------------------------------------
+# Install Ruby Packages (rvm) - alternatives
+#-----------------------------------------------------------------------------
+# RUN ./root/.rvm/scripts/gem install bundler \
+#     && ./root/.rvm/scripts/gem install rails \
+#     && ./root/.rvm/scripts/gem install rspec \
+#     && ./root/.rvm/scripts/gem install serverspec \
+#     && ./root/.rvm/scripts/gem install docker-api \
+#     && ./root/.rvm/scripts/gem install sqlite3 \
+#     && ./root/.rvm/scripts/gem install mongoid \
+#     && ./root/.rvm/scripts/gem install sequel \
+#     && ./root/.rvm/scripts/gem install pg \
+#     && ./root/.rvm/scripts/gem install mysql2 \
+#     && ./root/.rvm/scripts/gem install sequel_pg \
+#     && ./root/.rvm/scripts/gem install apktools
+
+#-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
 #-----------------------------------------------------------------------------
 RUN ./usr/bin/npm install chai \
@@ -215,10 +231,25 @@ RUN ./usr/bin/npm install chai \
 #-----------------------------------------------------------------------------
 # Install Javascipt Packages Manager
 #-----------------------------------------------------------------------------
-    && ./usr/bin/npm install bower \
-    && ./usr/bin/npm install grunt \
-    && ./usr/bin/npm install gulp \
-    && ./usr/bin/npm install yo
+    && ./usr/bin/npm install --global yarn \
+    && ./usr/bin/npm install --global bower \
+    && ./usr/bin/npm install --global grunt \
+    && ./usr/bin/npm install --global gulp \
+    && ./usr/bin/npm install --global yo \
+
+#-----------------------------------------------------------------------------
+# Upgrade Javascipt Packages Manager
+#-----------------------------------------------------------------------------
+    && ./usr/bin/npm upgrade --global yarn
+    && ./usr/bin/npm upgrade --global bower \
+    && ./usr/bin/npm upgrade --global grunt \
+    && ./usr/bin/npm upgrade --global gulp \
+    && ./usr/bin/npm upgrade --global yo 
+
+#-----------------------------------------------------------------------------
+# Move 'node_modules' To 'root' Folder 
+#-----------------------------------------------------------------------------
+RUN mv /node_modules /root/node_modules
 
 #-----------------------------------------------------------------------------
 # Install Composer PHP Packages Manager
