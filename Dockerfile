@@ -4,7 +4,12 @@ MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 #-----------------------------------------------------------------------------
 # Set Environment
 #-----------------------------------------------------------------------------
-ENV CONSUL_VERSION=0.8.3 \
+ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=1 \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
+    TERM=xterm \
+    CONSUL_VERSION=0.8.3 \
     CONSULUI_VERSION=0.8.3 \
     CONSULTEMPLATE_VERSION=0.18.3 \
     RUBY_VERSION=2.4.1
@@ -240,11 +245,15 @@ RUN ./usr/bin/npm install chai \
     && ./usr/bin/npm install --global bower \
     && ./usr/bin/npm install --global grunt \
     && ./usr/bin/npm install --global gulp \
-    && ./usr/bin/npm install --global yo \
+    && ./usr/bin/npm install --global yo 
 
 #-----------------------------------------------------------------------------
 # Upgrade Javascipt Packages Manager
 #-----------------------------------------------------------------------------
+RUN ./usr/bin/npm upgrade --global chai \
+    && ./usr/bin/npm upgrade --global tv4 \
+    && ./usr/bin/npm upgrade --global newman \
+
     && ./usr/bin/npm upgrade --global yarn \
     && ./usr/bin/npm upgrade --global bower \
     && ./usr/bin/npm upgrade --global grunt \
