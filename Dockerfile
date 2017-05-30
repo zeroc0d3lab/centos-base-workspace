@@ -253,7 +253,6 @@ RUN ./usr/bin/npm install chai \
 RUN ./usr/bin/npm upgrade --global chai \
     && ./usr/bin/npm upgrade --global tv4 \
     && ./usr/bin/npm upgrade --global newman \
-
     && ./usr/bin/npm upgrade --global yarn \
     && ./usr/bin/npm upgrade --global bower \
     && ./usr/bin/npm upgrade --global grunt \
