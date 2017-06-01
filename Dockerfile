@@ -60,8 +60,7 @@ RUN yum -y install \
 #        postgresql-devel \
 
 ### PostgreSQL 9.6 ###
-    && wget https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm -O /tmp/pgdg-9.6-3.rpm \
-    && rpm -ivh /tmp/pgdg-9.6-3.rpm \
+    && rpm -iUvh https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm \
     && yum install -y postgresql96-server postgresql96-devel \
 
 #-----------------------------------------------------------------------------
