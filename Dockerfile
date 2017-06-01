@@ -61,7 +61,7 @@ RUN yum -y install \
 
 ### PostgreSQL 9.6 ###
     && rpm -iUvh https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm \
-    && yum install -y postgresql96-server postgresql96-devel \
+    && yum install -y postgresql96-libs postgresql96-server postgresql96-devel \
 
 #-----------------------------------------------------------------------------
 # Install Consul Library
