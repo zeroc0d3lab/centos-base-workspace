@@ -56,14 +56,17 @@ RUN yum -y install \
 # Install PostgreSQL Library
 #-----------------------------------------------------------------------------
 ### PostgreSQL 9.2 (default)###
-         postgresql-libs \
-         postgresql-devel \
+#        postgresql-libs \
+#        postgresql-devel \
 
 ### PostgreSQL 9.6 ###
-#   && wget https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm -O /tmp/pgdg-9.6-3.rpm \
-#   && rpm -ivh /tmp/pgdg-9.6-3.rpm \
-#   && yum install -y postgresql96-server postgresql96-devel \
+    && wget https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm -O /tmp/pgdg-9.6-3.rpm \
+    && rpm -ivh /tmp/pgdg-9.6-3.rpm \
+    && yum install -y postgresql96-server postgresql96-devel \
 
+#-----------------------------------------------------------------------------
+# Install Consul Library
+#-----------------------------------------------------------------------------
     && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_linux_amd64.zip -o /tmp/consul.zip \
     && unzip /tmp/consul.zip -d /bin \
     && rm /tmp/consul.zip \
@@ -245,7 +248,7 @@ RUN ./usr/bin/npm install chai \
     && ./usr/bin/npm install --global bower \
     && ./usr/bin/npm install --global grunt \
     && ./usr/bin/npm install --global gulp \
-    && ./usr/bin/npm install --global yo 
+    && ./usr/bin/npm install --global yo
 
 #-----------------------------------------------------------------------------
 # Upgrade Javascipt Packages Manager
@@ -257,10 +260,10 @@ RUN ./usr/bin/npm upgrade --global chai \
     && ./usr/bin/npm upgrade --global bower \
     && ./usr/bin/npm upgrade --global grunt \
     && ./usr/bin/npm upgrade --global gulp \
-    && ./usr/bin/npm upgrade --global yo 
+    && ./usr/bin/npm upgrade --global yo
 
 #-----------------------------------------------------------------------------
-# Move 'node_modules' To 'root' Folder 
+# Move 'node_modules' To 'root' Folder
 #-----------------------------------------------------------------------------
 RUN mv /node_modules /root/node_modules
 
