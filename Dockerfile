@@ -46,7 +46,8 @@ RUN yum -y install \
          ncurses-devel \
          glibc-static \
          nodejs \
-
+         fontconfig \
+         
 #-----------------------------------------------------------------------------
 # Install MySQL (MariaDB) Library
 #-----------------------------------------------------------------------------
@@ -152,7 +153,7 @@ RUN mkdir -p /root/.fonts \
     && mkdir -p /root/.config/fontconfig/conf.d/ \
     && wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf -O /root/.fonts/PowerlineSymbols.otf \
     && wget https://github.com/powerline/powerline/raw/develop/font/10-powerline-symbols.conf -O /root/.config/fontconfig/conf.d/10-powerline-symbols.conf \
-    && fc-cache -vf /root/.fonts/
+    && ./usr/bin/fc-cache -vf /root/.fonts/
 
 #-----------------------------------------------------------------------------
 # Download & Install
