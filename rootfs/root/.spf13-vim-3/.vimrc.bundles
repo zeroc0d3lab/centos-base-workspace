@@ -102,6 +102,7 @@
     " General {
         if count(g:spf13_bundle_groups, 'general')
             Bundle 'ap/vim-buftabline'
+            Bundle 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
             Bundle 'scrooloose/nerdtree'
             Bundle 'altercation/vim-colors-solarized'
             Bundle 'spf13/vim-colors'
