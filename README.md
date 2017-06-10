@@ -24,5 +24,15 @@ This docker image includes:
   - [X] yeoman
 * composer
 
+## Notes:
+* Run vim then 
+  ```
+  :PluginInstall
+  ```
+* Update plugin vim (vundle) 
+  ```
+  :PluginUpdate
+  ```
+
 ## License
 GNU General Public License v2
