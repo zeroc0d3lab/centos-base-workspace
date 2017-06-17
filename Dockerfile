@@ -155,7 +155,10 @@ RUN mkdir -p /root/.fonts \
     && wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf -O /root/.fonts/PowerlineSymbols.otf \
     && wget https://github.com/powerline/powerline/raw/develop/font/10-powerline-symbols.conf -O /root/.config/fontconfig/conf.d/10-powerline-symbols.conf \
     && cp /root/.fonts/PowerlineSymbols.otf /usr/share/fonts/local/PowerlineSymbols.otf \
-    && ./usr/bin/fc-cache -vf /root/.fonts/
+    && cp /root/.fonts/PowerlineSymbols.otf /usr/share/fonts/PowerlineSymbols.otf \
+    && cp /root/.config/fontconfig/conf.d/10-powerline-symbols.conf /etc/fonts/conf.d/10-powerline-symbols.conf \
+    && ./usr/bin/fc-cache -vf /root/.fonts/ \
+    && ./usr/bin/fc-cache -vf /usr/share/fonts 
 
 #-----------------------------------------------------------------------------
 # Download & Install
