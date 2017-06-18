@@ -98,8 +98,8 @@ export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
 # source $HOME/.rvm/scripts/rvm
 # export PATH="$PATH:$HOME/.rvm/bin"
 # source $HOME/.rvm/scripts/rvm
-# export PATH="$PATH:$HOME/.rvm/bin" 
-# source $HOME/.rvm/scripts/rvm 
+# export PATH="$PATH:$HOME/.rvm/bin"
+# source $HOME/.rvm/scripts/rvm
 
 # Set PATH alternatives using this:
 # [[ -s "$HOME/.rvm/scripts/rvm"  ]] && source "$HOME/.rvm/scripts/rvm"
