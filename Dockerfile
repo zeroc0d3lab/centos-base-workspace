@@ -47,7 +47,7 @@ RUN yum -y install \
          glibc-static \
          nodejs \
          fontconfig \
-         
+
 #-----------------------------------------------------------------------------
 # Install MySQL (MariaDB) Library
 #-----------------------------------------------------------------------------
@@ -158,7 +158,7 @@ RUN mkdir -p /root/.fonts \
     && cp /root/.fonts/PowerlineSymbols.otf /usr/share/fonts/PowerlineSymbols.otf \
     && cp /root/.config/fontconfig/conf.d/10-powerline-symbols.conf /etc/fonts/conf.d/10-powerline-symbols.conf \
     && ./usr/bin/fc-cache -vf /root/.fonts/ \
-    && ./usr/bin/fc-cache -vf /usr/share/fonts 
+    && ./usr/bin/fc-cache -vf /usr/share/fonts
 
 #-----------------------------------------------------------------------------
 # Download & Install
@@ -230,7 +230,8 @@ RUN ./root/.rbenv/shims/gem install bundler \
     && ./root/.rbenv/shims/gem install pg \
     && ./root/.rbenv/shims/gem install mysql2 \
     && ./root/.rbenv/shims/gem install sequel_pg \
-    && ./root/.rbenv/shims/gem install apktools
+    && ./root/.rbenv/shims/gem install apktools \
+    && ./root/.rbenv/shims/gem install rubocop
 
 #-----------------------------------------------------------------------------
 # Install Ruby Packages (rvm) - alternatives
@@ -246,7 +247,8 @@ RUN ./root/.rbenv/shims/gem install bundler \
 #     && ./root/.rvm/scripts/gem install pg \
 #     && ./root/.rvm/scripts/gem install mysql2 \
 #     && ./root/.rvm/scripts/gem install sequel_pg \
-#     && ./root/.rvm/scripts/gem install apktools
+#     && ./root/.rbenv/shims/gem install apktools \
+#     && ./root/.rbenv/shims/gem install rubocop
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
@@ -291,6 +293,12 @@ RUN wget https://getcomposer.org/download/1.4.2/composer.phar -O /usr/local/bin/
 # Finalize (reconfigure)
 #-----------------------------------------------------------------------------
 COPY rootfs/ /
+
+#-----------------------------------------------------------------------------
+# Setup TrueColors (Terminal)
+#-----------------------------------------------------------------------------
+RUN cd /root/colors \
+    && /bin/sh 24-bit-colors.sh
 
 #-----------------------------------------------------------------------------
 # Run Init Docker Container
