@@ -104,7 +104,9 @@ RUN yum -y install \
 #-----------------------------------------------------------------------------
 # Install NodeJS
 #-----------------------------------------------------------------------------
-RUN yum -y install nodejs npm --enablerepo=epel \
+# RUN yum -y install nodejs npm --enablerepo=epel \
+RUN yum -y install https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm nodejs \
+
 
 #-----------------------------------------------------------------------------
 # Clean Up All Cache
@@ -294,14 +296,15 @@ RUN wget https://getcomposer.org/download/1.4.2/composer.phar -O /usr/local/bin/
     && sudo chmod +x /usr/local/bin/composer
 
 #-----------------------------------------------------------------------------
+# Setup TrueColors (Terminal)
+#-----------------------------------------------------------------------------
+COPY ./rootfs/root/colors/24-bit-colors.sh /root/colors/24-bit-colors.sh
+RUN ./root/colors/24-bit-colors.sh
+
+#-----------------------------------------------------------------------------
 # Finalize (reconfigure)
 #-----------------------------------------------------------------------------
 COPY rootfs/ /
-
-#-----------------------------------------------------------------------------
-# Setup TrueColors (Terminal)
-#-----------------------------------------------------------------------------
-RUN ./root/colors/24-bit-colors.sh
 
 #-----------------------------------------------------------------------------
 # Run Init Docker Container
