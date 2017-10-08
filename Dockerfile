@@ -299,7 +299,8 @@ RUN wget https://getcomposer.org/download/1.4.2/composer.phar -O /usr/local/bin/
 # Setup TrueColors (Terminal)
 #-----------------------------------------------------------------------------
 COPY ./rootfs/root/colors/24-bit-color.sh /root/colors/24-bit-color.sh
-RUN ./root/colors/24-bit-color.sh
+RUN chmod +x /root/colors/24-bit-color.sh \
+    ./root/colors/24-bit-color.sh
 
 #-----------------------------------------------------------------------------
 # Finalize (reconfigure)
