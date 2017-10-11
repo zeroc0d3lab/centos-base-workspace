@@ -1,14 +1,25 @@
-version: '2'
+version: '3.2'
 
 services:
-  base-workspace:
-    image: zeroc0d3lab/centos-base-workspace
+  consul:
+    image: zeroc0d3lab/centos-consul
+    ports:
+      - "8500:8500"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      #- /host/data:/var/consul                       # volume for data
     environment:
-      - CONSUL_VERSION=${CONSUL_VERSION}
-      - CONSULUI_VERSION=${CONSULUI_VERSION}
-      - CONSULTEMPLATE_VERSION=${CONSULTEMPLATE_VERSION}
-      - RUBY_VERSION=${RUBY_VERSION}
+      - CONSUL_OPTIONS=${CONSUL_OPTIONS}                   # minimal server options
 
+  base-workspace:
+    depends_on:
+      - consul
+    image: zeroc0d3lab/centos-base-workspace
+    ports:
+      - "${WORKSPACE_PORT}:22"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DATA_SAVE}/workspace:/home/docker                # volume for data
+    environment:
+      - RUBY_VERSION=${RUBY_VERSION}
+      - COMPOSER_VERSION=${COMPOSER_VERSION}
+      - PATH_WORKSPACE=${PATH_WORKSPACE}

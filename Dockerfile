@@ -1,26 +1,23 @@
-FROM zeroc0d3lab/centos-base:latest
+FROM zeroc0d3lab/centos-base-consul:latest
 MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 
 #-----------------------------------------------------------------------------
 # Set Environment
 #-----------------------------------------------------------------------------
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=1 \
-    LANG=en_US.UTF-8 \
-    LC_ALL=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8 \
-    TERM=xterm \
-    CONSUL_VERSION=0.8.3 \
-    CONSULUI_VERSION=0.8.3 \
-    CONSULTEMPLATE_VERSION=0.18.3 \
-    RUBY_VERSION=2.4.1
+ENV RUBY_VERSION=2.4.2 \
+    COMPOSER_VERSION=1.5.2 \
+    PATH_WORKSPACE=/home/docker
 
 #-----------------------------------------------------------------------------
-# Set Group & User for 'consul'
+# Set Group & User for 'docker'
 #-----------------------------------------------------------------------------
-RUN mkdir -p /var/lib/consul \
-    && groupadd consul \
-    && useradd -r -g consul consul \
-    && chown -R consul:consul /var/lib/consul
+RUN mkdir -p ${PATH_WORKSPACE} \
+    && groupadd docker \
+    && useradd -r -g docker docker \
+    && usermod -aG docker docker \
+    && chown -R docker:docker ${PATH_WORKSPACE} \
+    && mkdir -p ${PATH_WORKSPACE}/git-shell-commands \
+    && chmod 755 ${PATH_WORKSPACE}/git-shell-commands
 
 #-----------------------------------------------------------------------------
 # Find Fastest Repo & Update Repo
@@ -29,17 +26,17 @@ RUN yum makecache fast \
     && yum -y update
 
 #-----------------------------------------------------------------------------
-# Install Workspace Dependency
+# Install Workspace Dependency (1)
 #-----------------------------------------------------------------------------
 RUN yum -y install \
            --setopt=tsflags=nodocs \
            --disableplugin=fastestmirror \
          git \
-         nano \
-         zip \
-         unzip \
+         git-core \
          zsh \
          gcc \
+         gcc-c++ \
+         autoconf \
          automake \
          make \
          libevent-devel \
@@ -64,40 +61,21 @@ RUN yum -y install \
     && yum install -y postgresql96-libs postgresql96-server postgresql96-devel \
 
 #-----------------------------------------------------------------------------
-# Install Consul Library
-#-----------------------------------------------------------------------------
-    && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_linux_amd64.zip -o /tmp/consul.zip \
-    && unzip /tmp/consul.zip -d /bin \
-    && rm /tmp/consul.zip \
-    && mkdir -p /var/lib/consului \
-    && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_web_ui.zip -o /tmp/consului.zip \
-    && unzip /tmp/consului.zip -d /var/lib/consului \
-    && rm /tmp/consului.zip \
-    && curl -sSL https://releases.hashicorp.com/consul-template/${CONSULTEMPLATE_VERSION}/consul-template_${CONSULTEMPLATE_VERSION}_linux_amd64.zip -o /tmp/consul-template.zip \
-    && unzip /tmp/consul-template.zip -d /bin \
-    && rm -f /tmp/consul-template.zip
-
-#-----------------------------------------------------------------------------
-# Install Ruby Dependency
+# Install Workspace Dependency (2)
 #-----------------------------------------------------------------------------
 RUN yum -y install \
            --setopt=tsflags=nodocs \
            --disableplugin=fastestmirror \
-         git-core \
          zlib \
          zlib-devel \
-         gcc-c++ \
          patch \
          readline \
          readline-devel \
          libyaml-devel \
          libffi-devel \
          openssl-devel \
-         make \
          bzip2 \
          bison \
-         autoconf \
-         automake \
          libtool \
          sqlite-devel
 
@@ -107,16 +85,10 @@ RUN yum -y install \
 # RUN yum -y install nodejs npm --enablerepo=epel \
 RUN yum -y install https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm nodejs \
 
-
 #-----------------------------------------------------------------------------
 # Clean Up All Cache
 #-----------------------------------------------------------------------------
     && yum clean all
-
-#-----------------------------------------------------------------------------
-# Setup Locale UTF-8
-#-----------------------------------------------------------------------------
-RUN ["/usr/bin/localedef", "-i", "en_US", "-f", "UTF-8", "en_US.UTF-8"]
 
 #-----------------------------------------------------------------------------
 # Download & Install
@@ -271,7 +243,7 @@ RUN mv /node_modules /root/node_modules
 #-----------------------------------------------------------------------------
 # Install Composer PHP Packages Manager
 #-----------------------------------------------------------------------------
-RUN wget https://getcomposer.org/download/1.4.2/composer.phar -O /usr/local/bin/composer \
+RUN wget https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar -O /usr/local/bin/composer \
     && sudo chmod +x /usr/local/bin/composer
 
 #-----------------------------------------------------------------------------
@@ -280,6 +252,16 @@ RUN wget https://getcomposer.org/download/1.4.2/composer.phar -O /usr/local/bin/
 COPY ./rootfs/root/colors/24-bit-color.sh /root/colors/24-bit-color.sh
 RUN chmod a+x /root/colors/24-bit-color.sh \
     ./root/colors/24-bit-color.sh
+
+#-----------------------------------------------------------------------------
+# Set PORT Docker Container
+#-----------------------------------------------------------------------------
+EXPOSE 22
+
+#-----------------------------------------------------------------------------
+# Set Volume Docker Workspace
+#-----------------------------------------------------------------------------
+VOLUME [$PATH_WORKSPACE]
 
 #-----------------------------------------------------------------------------
 # Finalize (reconfigure)
@@ -295,3 +277,5 @@ CMD []
 ## NOTE:
 ## *) Run vim then >> :PluginInstall
 ## *) Update plugin vim (vundle) >> :PluginUpdate
+## *) Run in terminal >> vim +PluginInstall +q
+##                       vim +PluginUpdate +q

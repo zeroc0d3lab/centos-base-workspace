@@ -1,18 +1,38 @@
-########################
-#  ENVIRONMENT SETUP
-########################
+# ==============================================
+#   PATH FOR DATA
+# ==============================================
+DATA_SAVE=.data
 
+# ==============================================
+#   BASE (Environments)
+# ==============================================
+S6OVERLAY_VERSION=v1.20.0.0
+S6_BEHAVIOUR_IF_STAGE2_FAILS=1
+LANG=en_US.UTF-8
+LC_ALL=en_US.UTF-8
+LANGUAGE=en_US.UTF-8
+TERM=xterm
 
-########################
-#  VERSION
-########################
+# ==============================================
+#   BASE-CONSUL (Environments)
+# ==============================================
+BASE_CONSUL_PORT=1234
+CONSULTEMPLATE_VERSION=0.19.0
+
+# ==============================================
+#   CONSUL (Environments)
+# ==============================================
 CONSUL_VERSION=0.8.3
-CONSULUI_VERSION=0.8.3
-CONSULTEMPLATE_VERSION=0.18.3
-RUBY_VERSION=2.4.1
 
+# ==============================================
+#   WORKSPACE (Environments)
+# ==============================================
+RUBY_VERSION=2.4.2
+COMPOSER_VERSION=1.5.2
+PATH_WORKSPACE=/home/docker
+WORKSPACE_PORT=2222
 
-########################
+# ==============================================
 #  OPTIONAL ARGUMENTS
-########################
-
+# ==============================================
+CONSUL_OPTIONS=-server -bootstrap-expect 1 -client 0.0.0.0 -ui    # minimal server options
