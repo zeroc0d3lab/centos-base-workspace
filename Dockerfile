@@ -206,7 +206,7 @@ COPY ./rootfs/root/Gemfile.lock /root/Gemfile.lock
 COPY ./rootfs/root/gems.sh /root/gems.sh
 RUN chmod a+x /root/gems.sh \
     && cd /root \
-    && /bin/sh gems.sh 
+    && /bin/sh gems.sh
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
@@ -262,7 +262,7 @@ EXPOSE 22
 #-----------------------------------------------------------------------------
 # Set Volume Docker Workspace
 #-----------------------------------------------------------------------------
-VOLUME [$PATH_WORKSPACE]
+VOLUME [${PATH_WORKSPACE}, "/root"]
 
 #-----------------------------------------------------------------------------
 # Finalize (reconfigure)
