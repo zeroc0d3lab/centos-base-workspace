@@ -15,6 +15,7 @@ This docker image includes:
   - [X] gem mysql2 (run: yum install -y mysql-devel)
   - [X] gem pg, sequel_pg (run: yum install -y postgresql-libs postgresql-devel)
   - [X] gem rubocop
+  - [X] [**others**](https://github.com/zeroc0d3lab/centos-base-workspace/blob/master/rootfs/root/Gemfile)
 * npm
   - [X] npm test unit (ChaiJS, TV4, Newman)
 * js package manager

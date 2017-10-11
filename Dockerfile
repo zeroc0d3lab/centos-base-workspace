@@ -205,7 +205,8 @@ COPY ./rootfs/root/Gemfile.lock /root/Gemfile.lock
 #-----------------------------------------------------------------------------
 COPY ./rootfs/root/gems.sh /root/gems.sh
 RUN chmod a+x /root/gems.sh \
-    && ./root/gems.sh
+    && cd /root \
+    && /bin/sh gems.sh 
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
