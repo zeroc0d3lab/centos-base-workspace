@@ -197,15 +197,15 @@ RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv \
 #-----------------------------------------------------------------------------
 # Copy package dependencies in Gemfile
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/Gemfile /root/Gemfile
-COPY ./rootfs/root/Gemfile.lock /root/Gemfile.lock
+COPY ./rootfs/root/Gemfile /tmp/Gemfile
+COPY ./rootfs/root/Gemfile.lock /tmp/Gemfile.lock
 
 #-----------------------------------------------------------------------------
 # Install Ruby Packages (rbenv/rvm)
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/gems.sh $HOME/gems.sh
-ONBUILD RUN chmod a+x $HOME/gems.sh \
-            && /bin/sh $HOME/gems.sh
+COPY ./rootfs/root/gems.sh /tmp/gems.sh
+RUN chmod a+x /tmp/gems.sh; sync \
+    && ./tmp/gems.sh
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
