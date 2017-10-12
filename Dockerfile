@@ -204,8 +204,8 @@ COPY ./rootfs/root/Gemfile.lock /root/Gemfile.lock
 # Install Ruby Packages (rbenv/rvm)
 #-----------------------------------------------------------------------------
 COPY ./rootfs/root/gems.sh $HOME/gems.sh
-RUN chmod a+x $HOME/gems.sh \
-    && /bin/sh $HOME/gems.sh
+ONBUILD RUN chmod a+x $HOME/gems.sh \
+            && /bin/sh $HOME/gems.sh
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
@@ -249,9 +249,9 @@ RUN wget https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar -O /
 #-----------------------------------------------------------------------------
 # Setup TrueColors (Terminal)
 #-----------------------------------------------------------------------------
+RUN chmod a+x ./rootfs/root/colors/24-bit-color.sh
 COPY ./rootfs/root/colors/24-bit-color.sh /root/colors/24-bit-color.sh
-RUN chmod a+x /root/colors/24-bit-color.sh \
-    ./root/colors/24-bit-color.sh
+RUN ./rootfs/root/colors/24-bit-color.sh
 
 #-----------------------------------------------------------------------------
 # Set PORT Docker Container
