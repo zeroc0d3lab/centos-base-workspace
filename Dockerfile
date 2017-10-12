@@ -204,9 +204,9 @@ COPY ./rootfs/root/Gemfile.lock /tmp/Gemfile.lock
 #-----------------------------------------------------------------------------
 # Install Ruby Packages (rbenv/rvm)
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/gems.sh /tmp/gems.sh
-ONBUILD RUN chmod a+x /tmp/gems.sh; sync \
-            && ./tmp/gems.sh
+# COPY ./rootfs/root/gems.sh /tmp/gems.sh
+# RUN chmod a+x /tmp/gems.sh; sync \
+#     && ./tmp/gems.sh
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
