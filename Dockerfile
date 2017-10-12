@@ -14,7 +14,7 @@ ENV RUBY_VERSION=2.4.2 \
 RUN mkdir -p ${PATH_WORKSPACE} \
     && groupadd docker \
     && useradd -r -g docker docker \
-    && usermod -aG docker docker \
+    && usermod -aG root docker \
     && chown -R docker:docker ${PATH_WORKSPACE} \
     && mkdir -p ${PATH_WORKSPACE}/git-shell-commands \
     && chmod 755 ${PATH_WORKSPACE}/git-shell-commands
@@ -204,8 +204,8 @@ COPY ./rootfs/root/Gemfile.lock /tmp/Gemfile.lock
 # Install Ruby Packages (rbenv/rvm)
 #-----------------------------------------------------------------------------
 COPY ./rootfs/root/gems.sh /tmp/gems.sh
-RUN chmod a+x /tmp/gems.sh; sync \
-    && ./tmp/gems.sh
+ONBUILD RUN chmod a+x /tmp/gems.sh; sync \
+            && ./tmp/gems.sh
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
