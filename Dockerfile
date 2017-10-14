@@ -101,25 +101,35 @@ RUN rm -rf /root/.bash_it \
     && touch /root/.bashrc \
     && touch /root/.zshrc \
     && cd /root \
-    && git clone https://github.com/Bash-it/bash-it.git /opt/bash_it \
-    && git clone https://github.com/speedenator/agnoster-bash.git /opt/bash_it/themes/agnoster-bash \
-    && git clone https://github.com/robbyrussell/oh-my-zsh.git /opt/oh-my-zsh \
-    && cp /opt/bash_it /root/.bash_it \
-    && cp /opt/oh-my-zsh /root/.oh-my-zsh
+    && git clone https://github.com/Bash-it/bash-it.git /opt/.bash_it \
+    && git clone https://github.com/speedenator/agnoster-bash.git /opt/.bash_it/themes/agnoster-bash \
+    && git clone https://github.com/robbyrussell/oh-my-zsh.git /opt/.oh-my-zsh \
+    && cd /opt  \
+    && tar zcvf bash_it.tar.gz .bash_it \
+    && tar zcvf oh-my-zsh.tar.gz .oh-my-zsh \
+    && cp /opt/bash_it.tar.gz $HOME \
+    && cp /opt/oh-my-zsh.tar.gz $HOME \
+    && cd $HOME \
+    && tar zxvf $HOME/bash_it.tar.gz \
+    && tar zxvf oh-my-zsh.tar.gz
 
 #-----------------------------------------------------------------------------
 # Download & Install
 # -) tmux + themes
 #-----------------------------------------------------------------------------
 RUN rm -rf /opt/tmux \
-    && rm -rf /root/.tmux/plugins/tpm \
-    && touch /root/.tmux.conf \
-    && git clone https://github.com/tmux-plugins/tpm.git /opt/tmux/plugins/tpm \
-    && git clone https://github.com/tmux/tmux.git /opt/tmux \
-    && git clone https://github.com/seebi/tmux-colors-solarized.git /opt/tmux-colors-solarized \
-    && cp /opt/tmux /root/.tmux
+    && rm -rf $HOME/.tmux/plugins/tpm \
+    && touch $HOME/.tmux.conf \
+    && git clone https://github.com/tmux/tmux.git /opt/.tmux \
+    && git clone https://github.com/tmux-plugins/tpm.git /opt/.tmux/plugins/tpm \
+    && git clone https://github.com/seebi/tmux-colors-solarized.git /opt/.tmux-colors-solarized \
+    && cd /opt  \
+    && tar zcvf tmux.tar.gz .tmux \
+    && cp /opt/tmux.tar.gz $HOME \
+    && cd $HOME \
+    && tar zxvf tmux.tar.gz
 
-RUN cd /opt/tmux \
+RUN cd $HOME/.tmux \
     && /bin/sh autogen.sh \
     && /bin/sh ./configure \
     && sudo make \
@@ -143,8 +153,12 @@ RUN mkdir -p $HOME/.fonts \
 # Download & Install
 # -) dircolors (terminal colors)
 #-----------------------------------------------------------------------------
-RUN git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git /opt/solarized \
-    && cp /opt/solarized $HOME/.solarized
+RUN git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git /opt/.solarized \
+    && cd /opt  \
+    && tar zcvf solarized.tar.gz .solarized \
+    && cp /opt/solarized.tar.gz $HOME \
+    && cd $HOME \
+    && tar zxvf solarized.tar.gz
 
 #-----------------------------------------------------------------------------
 # Download & Install
