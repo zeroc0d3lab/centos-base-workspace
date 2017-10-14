@@ -101,25 +101,25 @@ RUN rm -rf /root/.bash_it \
     && touch /root/.bashrc \
     && touch /root/.zshrc \
     && cd /root \
-    && git clone https://github.com/Bash-it/bash-it.git /root/bash_it \
-    && git clone https://github.com/speedenator/agnoster-bash.git /root/bash_it/themes/agnoster-bash \
-    && git clone https://github.com/robbyrussell/oh-my-zsh.git /root/oh-my-zsh \
-    && mv /root/bash_it /root/.bash_it \
-    && mv /root/oh-my-zsh /root/.oh-my-zsh
+    && git clone https://github.com/Bash-it/bash-it.git /opt/bash_it \
+    && git clone https://github.com/speedenator/agnoster-bash.git /opt/bash_it/themes/agnoster-bash \
+    && git clone https://github.com/robbyrussell/oh-my-zsh.git /opt/oh-my-zsh \
+    && cp /opt/bash_it /root/.bash_it \
+    && cp /opt/oh-my-zsh /root/.oh-my-zsh
 
 #-----------------------------------------------------------------------------
 # Download & Install
 # -) tmux + themes
 #-----------------------------------------------------------------------------
-RUN rm -rf /tmp/tmux \
+RUN rm -rf /opt/tmux \
     && rm -rf /root/.tmux/plugins/tpm \
     && touch /root/.tmux.conf \
-    && git clone https://github.com/tmux-plugins/tpm.git /root/tmux/plugins/tpm \
-    && git clone https://github.com/tmux/tmux.git /tmp/tmux \
-    && git clone https://github.com/seebi/tmux-colors-solarized.git /root/tmux-colors-solarized \
-    && mv /root/tmux /root/.tmux
+    && git clone https://github.com/tmux-plugins/tpm.git /opt/tmux/plugins/tpm \
+    && git clone https://github.com/tmux/tmux.git /opt/tmux \
+    && git clone https://github.com/seebi/tmux-colors-solarized.git /opt/tmux-colors-solarized \
+    && cp /opt/tmux /root/.tmux
 
-RUN cd /tmp/tmux \
+RUN cd /opt/tmux \
     && /bin/sh autogen.sh \
     && /bin/sh ./configure \
     && sudo make \
@@ -128,45 +128,45 @@ RUN cd /tmp/tmux \
 #-----------------------------------------------------------------------------
 # Install Font Config
 #-----------------------------------------------------------------------------
-RUN mkdir -p /root/.fonts \
-    && mkdir -p /root/.config/fontconfig/conf.d/ \
+RUN mkdir -p $HOME/.fonts \
+    && mkdir -p $HOME/.config/fontconfig/conf.d/ \
     && mkdir -p /usr/share/fonts/local \
-    && wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf -O /root/.fonts/PowerlineSymbols.otf \
-    && wget https://github.com/powerline/powerline/raw/develop/font/10-powerline-symbols.conf -O /root/.config/fontconfig/conf.d/10-powerline-symbols.conf \
-    && cp /root/.fonts/PowerlineSymbols.otf /usr/share/fonts/local/PowerlineSymbols.otf \
-    && cp /root/.fonts/PowerlineSymbols.otf /usr/share/fonts/PowerlineSymbols.otf \
-    && cp /root/.config/fontconfig/conf.d/10-powerline-symbols.conf /etc/fonts/conf.d/10-powerline-symbols.conf \
-    && ./usr/bin/fc-cache -vf /root/.fonts/ \
+    && wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf -O $HOME/.fonts/PowerlineSymbols.otf \
+    && wget https://github.com/powerline/powerline/raw/develop/font/10-powerline-symbols.conf -O $HOME/.config/fontconfig/conf.d/10-powerline-symbols.conf \
+    && cp $HOME/.fonts/PowerlineSymbols.otf /usr/share/fonts/local/PowerlineSymbols.otf \
+    && cp $HOME/.fonts/PowerlineSymbols.otf /usr/share/fonts/PowerlineSymbols.otf \
+    && cp $HOME/.config/fontconfig/conf.d/10-powerline-symbols.conf /etc/fonts/conf.d/10-powerline-symbols.conf \
+    && ./usr/bin/fc-cache -vf $HOME/.fonts/ \
     && ./usr/bin/fc-cache -vf /usr/share/fonts
 
 #-----------------------------------------------------------------------------
 # Download & Install
 # -) dircolors (terminal colors)
 #-----------------------------------------------------------------------------
-RUN git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git /root/solarized \
-    && mv /root/solarized /root/.solarized
+RUN git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git /opt/solarized \
+    && cp /opt/solarized $HOME/.solarized
 
 #-----------------------------------------------------------------------------
 # Download & Install
 # -) vim
 # -) vundle + themes
 #-----------------------------------------------------------------------------
-RUN git clone https://github.com/vim/vim.git /root/vim
+RUN git clone https://github.com/vim/vim.git /opt/vim
 
-RUN cd /root/vim/src \
+RUN cd /opt/vim/src \
     && /bin/sh ./configure \
     && sudo make \
     && sudo make install \
     && sudo mkdir /usr/share/vim \
     && sudo mkdir /usr/share/vim/vim80/ \
-    && sudo cp -fr /root/vim/runtime/* /usr/share/vim/vim80/ \
-    && git clone https://github.com/zeroc0d3/vim-ide.git /root/vim-ide \
-    && /bin/sh /root/vim-ide/step02.sh
+    && sudo cp -fr /opt/vim/runtime/* /usr/share/vim/vim80/ \
+    && git clone https://github.com/zeroc0d3/vim-ide.git /opt/vim-ide \
+    && /bin/sh /opt/vim-ide/step02.sh
 
-RUN git clone https://github.com/dracula/vim.git /tmp/themes/dracula \
-    && git clone https://github.com/blueshirts/darcula.git /tmp/themes/darcula \
-    && sudo cp /tmp/themes/dracula/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
-    && sudo cp /tmp/themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
+RUN git clone https://github.com/dracula/vim.git /opt/vim-themes/dracula \
+    && git clone https://github.com/blueshirts/darcula.git /opt/vim-themes/darcula \
+    && sudo cp /opt/vim-themes/dracula/colors/dracula.vim $HOME/.vim/bundle/vim-colors/colors/dracula.vim \
+    && sudo cp /opt/vim-themes/darcula/colors/darcula.vim $HOME/.vim/bundle/vim-colors/colors/darcula.vim
 
 #-----------------------------------------------------------------------------
 # Prepare Install Ruby
@@ -179,34 +179,43 @@ COPY ./rootfs/root/.bashrc /root/.bashrc
 #-----------------------------------------------------------------------------
 # Install Ruby with rbenv (default)
 #-----------------------------------------------------------------------------
-RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv \
-    && git clone https://github.com/rbenv/ruby-build.git /root/.rbenv/plugins/ruby-build \
-    && ./root/.rbenv/bin/rbenv install ${RUBY_VERSION} \
-    && ./root/.rbenv/bin/rbenv global ${RUBY_VERSION} \
-    && ./root/.rbenv/bin/rbenv rehash \
-    && ./root/.rbenv/shims/ruby -v
+RUN git clone https://github.com/rbenv/rbenv.git /usr/local/rbenv \
+    && git clone https://github.com/rbenv/ruby-build.git /usr/local/rbenv/plugins/ruby-build \
+    && ./usr/local/rbenv/bin/rbenv install ${RUBY_VERSION} \
+    && ./usr/local/rbenv/bin/rbenv global ${RUBY_VERSION} \
+    && ./usr/local/rbenv/bin/rbenv rehash \
+    && ./usr/local/rbenv/shims/ruby -v
 
 #-----------------------------------------------------------------------------
 # Install Ruby with rvm (alternatives)
 #-----------------------------------------------------------------------------
 # RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 \
-#     && curl -sSL https://get.rvm.io | bash -s stable \
-#     && ./root/.rvm/scripts/rvm install ${RUBY_VERSION} \
-#     && ./root/.rvm/scripts/rvm use ${RUBY_VERSION} --default
+#     && curl -sSL https://get.rvm.io | sudo bash -s stable \
+#     && sudo usermod -a -G rvm docker \
+#     && ./usr/local/rvm/scripts/rvm install ${RUBY_VERSION} \
+#     && ./usr/local/rvm/scripts/rvm use ${RUBY_VERSION} --default
 #     && ./usr/bin/ruby -v
+
+#-----------------------------------------------------------------------------
+# Change 'root' & 'docker' user Password
+#-----------------------------------------------------------------------------
+# RUN echo 'root:'${SSH_ROOT_PASSWORD} | chpasswd
+RUN echo 'root:docker' | chpasswd \
+    echo 'docker:docker' | chpasswd
 
 #-----------------------------------------------------------------------------
 # Copy package dependencies in Gemfile
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/Gemfile /tmp/Gemfile
-COPY ./rootfs/root/Gemfile.lock /tmp/Gemfile.lock
+COPY ./rootfs/root/Gemfile /opt/Gemfile
+COPY ./rootfs/root/Gemfile.lock /opt/Gemfile.lock
 
 #-----------------------------------------------------------------------------
 # Install Ruby Packages (rbenv/rvm)
 #-----------------------------------------------------------------------------
-# COPY ./rootfs/root/gems.sh /tmp/gems.sh
-# RUN chmod a+x /tmp/gems.sh; sync \
-#     && ./tmp/gems.sh
+COPY ./rootfs/root/gems.sh /opt/gems.sh
+# RUN chmod 777 /opt/gems.sh; sync \
+#     chmod a+x /opt/gems.sh; sync \
+#     && ./opt/gems.sh
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
@@ -250,9 +259,9 @@ RUN wget https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar -O /
 #-----------------------------------------------------------------------------
 # Setup TrueColors (Terminal)
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/colors/24-bit-color.sh /tmp/24-bit-color.sh
-RUN chmod a+x /tmp/24-bit-color.sh; sync \
-    && ./tmp/24-bit-color.sh
+COPY ./rootfs/root/colors/24-bit-color.sh /opt/24-bit-color.sh
+RUN chmod a+x /opt/24-bit-color.sh; sync \
+    && ./opt/24-bit-color.sh
 
 #-----------------------------------------------------------------------------
 # Set PORT Docker Container
