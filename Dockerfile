@@ -146,8 +146,8 @@ RUN mkdir -p $HOME/.fonts \
     && cp $HOME/.fonts/PowerlineSymbols.otf /usr/share/fonts/local/PowerlineSymbols.otf \
     && cp $HOME/.fonts/PowerlineSymbols.otf /usr/share/fonts/PowerlineSymbols.otf \
     && cp $HOME/.config/fontconfig/conf.d/10-powerline-symbols.conf /etc/fonts/conf.d/10-powerline-symbols.conf \
-    && ./usr/bin/fc-cache -vf $HOME/.fonts/ \
-    && ./usr/bin/fc-cache -vf /usr/share/fonts
+    && /usr/bin/fc-cache -vf $HOME/.fonts/ \
+    && /usr/bin/fc-cache -vf /usr/share/fonts
 
 #-----------------------------------------------------------------------------
 # Download & Install
@@ -197,10 +197,10 @@ COPY ./rootfs/root/.bashrc /root/.bashrc
 COPY ./rootfs/opt/rbenv.sh /etc/profile.d/rbenv.sh
 RUN git clone https://github.com/rbenv/rbenv.git /usr/local/rbenv \
     && git clone https://github.com/rbenv/ruby-build.git /usr/local/rbenv/plugins/ruby-build \
-    && /bin/sh /usr/local/rbenv/bin/rbenv install ${RUBY_VERSION} \
-    && /bin/sh /usr/local/rbenv/bin/rbenv global ${RUBY_VERSION} \
-    && /bin/sh /usr/local/rbenv/bin/rbenv rehash \
-    && /bin/sh /usr/local/rbenv/shims/ruby -v
+    && /usr/local/rbenv/bin/rbenv install ${RUBY_VERSION} \
+    && /usr/local/rbenv/bin/rbenv global ${RUBY_VERSION} \
+    && /usr/local/rbenv/bin/rbenv rehash \
+    && /usr/local/rbenv/shims/ruby -v
 
 #-----------------------------------------------------------------------------
 # Install Ruby with rvm (alternatives)
