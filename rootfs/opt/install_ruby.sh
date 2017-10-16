@@ -1,6 +1,7 @@
 #!/bin/sh
 
 DATE=`date '+%Y-%m-%d %H:%M:%S'`
+DEFAULT_VERSION='2.4.2'
 
 logo() {
   echo "--------------------------------------------------------------------------"
@@ -14,12 +15,47 @@ logo() {
   echo " Date / Time: $DATE"
 }
 
+check_version() {
+  if [ "${RUBY_VERSION}" = "" ]
+  then
+    ${RUBY_VERSION} = $DEFAULT_VERSION
+  fi
+}
+
 load_env() {
   echo "--------------------------------------------------------------------------"
   echo "## Load Environment: "
   echo "   $HOME/.bashrc"
   source ~/.bashrc
   exec $SHELL
+}
+
+install_ruby() {
+  if [ "${RUBY_PACKAGE}" = "rbenv" ]
+  then
+    #-----------------------------------------------------------------------------
+    # Install Ruby with rbenv (default)
+    #-----------------------------------------------------------------------------
+    git clone https://github.com/rbenv/rbenv.git $HOME/.rbenv \
+    && git clone https://github.com/rbenv/ruby-build.git $HOME/.rbenv/plugins/ruby-build \
+    && exec $SHELL \
+    && $HOME/.rbenv/bin/rbenv install ${RUBY_VERSION} \
+    && $HOME/.rbenv/bin/rbenv global ${RUBY_VERSION} \
+    && $HOME/.rbenv/bin/rbenv rehash \
+    && $HOME/.rbenv/shims/ruby -v
+  else
+    #-----------------------------------------------------------------------------
+    # Install Ruby with rvm (alternatives)
+    #-----------------------------------------------------------------------------
+    gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 \
+    && curl -sSL https://get.rvm.io | sudo bash -s stable \
+    && sudo usermod -a -G rvm root \
+    && sudo usermod -a -G rvm docker \
+    && source ~/.bashrc \
+    && /usr/local/rvm/bin/rvm install ${RUBY_VERSION} \
+    && /usr/local/rvm/bin/rvm use ${RUBY_VERSION} --default \
+    && /usr/bin/ruby -v
+  fi
 }
 
 check(){
@@ -44,20 +80,13 @@ install_bundle() {
   $GEM install bundle
 }
 
-install_package() {
-  echo "--------------------------------------------------------------------------"
-  echo "## Install Package: "
-  BUNDLE=`which bundle`
-  echo "   $BUNDLE install"
-  $BUNDLE install
-}
-
 main() {
   logo
+  #check_version
+  install_ruby
   load_env
   check
   install_bundle
-  install_package
 }
 
 ### START HERE ###
