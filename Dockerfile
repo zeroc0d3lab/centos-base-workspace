@@ -9,6 +9,14 @@ ENV RUBY_VERSION=2.4.2 \
     PATH_HOME=/home/docker \
     PATH_WORKSPACE=/home/docker/workspace
 
+ENV RUBY_PACKAGE="rbenv"
+    # ("rbenv" = using rbenv package manager, "rvm" = using rvm package manager)
+
+#-----------------------------------------------------------------------------
+# Set Configuration
+#-----------------------------------------------------------------------------
+COPY rootfs/ /
+
 #-----------------------------------------------------------------------------
 # Set Group & User for 'docker'
 #-----------------------------------------------------------------------------
@@ -190,33 +198,9 @@ RUN git clone https://github.com/dracula/vim.git /opt/vim-themes/dracula \
 #-----------------------------------------------------------------------------
 COPY ./rootfs/root/.zshrc /root/.zshrc
 COPY ./rootfs/root/.bashrc /root/.bashrc
-
-#-----------------------------------------------------------------------------
-# Install Ruby with rbenv (default)
-#-----------------------------------------------------------------------------
-COPY ./rootfs/opt/rbenv.sh /etc/profile.d/rbenv.sh
-RUN git clone https://github.com/rbenv/rbenv.git /usr/local/rbenv \
-    && git clone https://github.com/rbenv/ruby-build.git /usr/local/rbenv/plugins/ruby-build \
-    && cd /usr/local/rbenv/bin \
-    && rbenv install ${RUBY_VERSION} \
-    && rbenv global ${RUBY_VERSION} \
-    && rbenv rehash \
-    && cd /usr/local/rbenv/shims \
-    && ruby -v
-
-#-----------------------------------------------------------------------------
-# Install Ruby with rvm (alternatives)
-#-----------------------------------------------------------------------------
-# COPY ./rootfs/opt/rvm.sh /etc/profile.d/rvm.sh
-# RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 \
-#     && curl -sSL https://get.rvm.io | sudo bash -s stable \
-#     && sudo usermod -a -G rvm root \
-#     && sudo usermod -a -G rvm docker \
-#     && cd /usr/local/rvm/scripts \
-#     && rvm install ${RUBY_VERSION} \
-#     && rvm use ${RUBY_VERSION} --default \
-#     && cd /usr/bin \
-#     && ruby -v
+COPY ./rootfs/opt/ruby.sh /etc/profile.d/ruby.sh
+COPY ./rootfs/opt/install_ruby.sh /opt/install_ruby.sh
+RUN sudo /bin/sh /opt/install_ruby.sh
 
 #-----------------------------------------------------------------------------
 # Copy package dependencies in Gemfile
@@ -228,9 +212,7 @@ COPY ./rootfs/root/Gemfile.lock /opt/Gemfile.lock
 # Install Ruby Packages (rbenv/rvm)
 #-----------------------------------------------------------------------------
 COPY ./rootfs/root/gems.sh /opt/gems.sh
-# RUN chmod 777 /opt/gems.sh; sync \
-#     chmod a+x /opt/gems.sh; sync \
-#     && ./opt/gems.sh
+RUN sudo /bin/sh /opt/gems.sh
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
@@ -292,11 +274,6 @@ EXPOSE 22
 # Set Volume Docker Workspace
 #-----------------------------------------------------------------------------
 VOLUME ["/home/docker", "/home/docker/workspace", "/root"]
-
-#-----------------------------------------------------------------------------
-# Finalize (reconfigure)
-#-----------------------------------------------------------------------------
-COPY rootfs/ /
 
 #-----------------------------------------------------------------------------
 # Run Init Docker Container
