@@ -183,7 +183,7 @@ RUN cd /opt/vim/src \
     && sudo mkdir /usr/share/vim/vim80/ \
     && sudo cp -fr /opt/vim/runtime/* /usr/share/vim/vim80/ \
     && git clone https://github.com/zeroc0d3/vim-ide.git /opt/vim-ide \
-    && /bin/sh /opt/vim-ide/step02.sh
+    && sudo /bin/sh /opt/vim-ide/step02.sh
 
 RUN git clone https://github.com/dracula/vim.git /opt/vim-themes/dracula \
     && git clone https://github.com/blueshirts/darcula.git /opt/vim-themes/darcula \
@@ -217,30 +217,30 @@ RUN sudo /bin/sh /opt/gems.sh
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
 #-----------------------------------------------------------------------------
-RUN ./usr/bin/npm install chai \
-    && ./usr/bin/npm install tv4 \
-    && ./usr/bin/npm install newman \
+RUN /usr/bin/npm install chai \
+    && /usr/bin/npm install tv4 \
+    && /usr/bin/npm install newman \
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Packages Manager
 #-----------------------------------------------------------------------------
-    && ./usr/bin/npm install --global yarn \
-    && ./usr/bin/npm install --global bower \
-    && ./usr/bin/npm install --global grunt \
-    && ./usr/bin/npm install --global gulp \
-    && ./usr/bin/npm install --global yo
+    && /usr/bin/npm install --global yarn \
+    && /usr/bin/npm install --global bower \
+    && /usr/bin/npm install --global grunt \
+    && /usr/bin/npm install --global gulp \
+    && /usr/bin/npm install --global yo
 
 #-----------------------------------------------------------------------------
 # Upgrade Javascipt Packages Manager
 #-----------------------------------------------------------------------------
-RUN ./usr/bin/npm upgrade --global chai \
-    && ./usr/bin/npm upgrade --global tv4 \
-    && ./usr/bin/npm upgrade --global newman \
-    && ./usr/bin/npm upgrade --global yarn \
-    && ./usr/bin/npm upgrade --global bower \
-    && ./usr/bin/npm upgrade --global grunt \
-    && ./usr/bin/npm upgrade --global gulp \
-    && ./usr/bin/npm upgrade --global yo
+RUN /usr/bin/npm upgrade --global chai \
+    && /usr/bin/npm upgrade --global tv4 \
+    && /usr/bin/npm upgrade --global newman \
+    && /usr/bin/npm upgrade --global yarn \
+    && /usr/bin/npm upgrade --global bower \
+    && /usr/bin/npm upgrade --global grunt \
+    && /usr/bin/npm upgrade --global gulp \
+    && /usr/bin/npm upgrade --global yo
 
 #-----------------------------------------------------------------------------
 # Move 'node_modules' To 'root' Folder
@@ -258,7 +258,7 @@ RUN wget https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar -O /
 #-----------------------------------------------------------------------------
 COPY ./rootfs/root/colors/24-bit-color.sh /opt/24-bit-color.sh
 RUN chmod a+x /opt/24-bit-color.sh; sync \
-    && ./opt/24-bit-color.sh
+    && sudo /bin/sh /opt/24-bit-color.sh
 
 #-----------------------------------------------------------------------------
 # Cleanup 'root' folder
