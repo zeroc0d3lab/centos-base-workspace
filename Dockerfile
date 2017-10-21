@@ -266,9 +266,9 @@ RUN cd /usr/local/src \
             --with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu \
             --enable-python3interp \
             --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
-            --enable-luainterp \
-            --with-luajit \
-            --with-lua-prefix=/usr/include/lua5.1 \
+#           --enable-luainterp \
+#           --with-luajit \
+#           --with-lua-prefix=/usr/include/lua5.1 \
             --enable-cscope \
             --enable-gui=auto \
             --with-features=huge \
