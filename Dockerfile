@@ -4,7 +4,10 @@ MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 #-----------------------------------------------------------------------------
 # Set Environment
 #-----------------------------------------------------------------------------
-ENV RUBY_VERSION=2.4.2 \
+ENV VIM_VERSION=8.0.1207 \
+    LUA_VERSION=5.3.4 \
+    LUAROCKS_VERSION=2.4.3 \
+    RUBY_VERSION=2.4.2 \
     COMPOSER_VERSION=1.5.2 \
     PATH_HOME=/home/docker \
     PATH_WORKSPACE=/home/docker/workspace
@@ -12,11 +15,7 @@ ENV RUBY_VERSION=2.4.2 \
 ENV RUBY_PACKAGE="rbenv"
     # ("rbenv" = using rbenv package manager, "rvm" = using rvm package manager)
 
-#-----------------------------------------------------------------------------
-# Set Configuration
-#-----------------------------------------------------------------------------
-COPY rootfs/ /
-
+USER root
 #-----------------------------------------------------------------------------
 # Set Group & User for 'docker'
 #-----------------------------------------------------------------------------
@@ -31,6 +30,9 @@ RUN mkdir -p ${PATH_HOME} \
 #-----------------------------------------------------------------------------
 # Find Fastest Repo & Update Repo
 #-----------------------------------------------------------------------------
+RUN curl -L https://copr.fedorainfracloud.org/coprs/mcepl/vim8/repo/epel-7/mcepl-vim8-epel-7.repo \
+      -o /etc/yum.repos.d/mcepl-vim8-epel-7.repo
+
 RUN yum makecache fast \
     && yum -y update
 
@@ -52,6 +54,11 @@ RUN yum -y install \
          ncurses-devel \
          glibc-static \
          fontconfig \
+         kernel-devel \
+         readline-dev \
+         lua-devel \ 
+         lzo-devel \
+         vim* \
 
 #-----------------------------------------------------------------------------
 # Install MySQL (MariaDB) Library
@@ -92,12 +99,7 @@ RUN yum -y install \
 # Install NodeJS
 #-----------------------------------------------------------------------------
 # RUN yum -y install nodejs npm --enablerepo=epel \
-RUN yum -y install https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm nodejs \
-
-#-----------------------------------------------------------------------------
-# Clean Up All Cache
-#-----------------------------------------------------------------------------
-    && yum clean all
+RUN yum -y install https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm nodejs 
 
 #-----------------------------------------------------------------------------
 # Download & Install
@@ -112,6 +114,7 @@ RUN rm -rf /root/.bash_it \
     && git clone https://github.com/Bash-it/bash-it.git /opt/.bash_it \
     && git clone https://github.com/speedenator/agnoster-bash.git /opt/.bash_it/themes/agnoster-bash \
     && git clone https://github.com/robbyrussell/oh-my-zsh.git /opt/.oh-my-zsh \
+    && git clone https://github.com/bhilburn/powerlevel9k.git /opt/.oh-my-zsh/custom/themes/powerlevel9k
     && cd /opt  \
     && tar zcvf bash_it.tar.gz .bash_it \
     && tar zcvf oh-my-zsh.tar.gz .oh-my-zsh \
@@ -169,29 +172,6 @@ RUN git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git /
     && tar zxvf solarized.tar.gz
 
 #-----------------------------------------------------------------------------
-# Download & Install
-# -) vim
-# -) vundle + themes
-#-----------------------------------------------------------------------------
-RUN git clone https://github.com/vim/vim.git /opt/vim
-
-RUN cd /opt/vim/src \
-    && /bin/sh ./configure \
-    && sudo make \
-    && sudo make install \
-    && sudo mkdir /usr/share/vim \
-    && sudo mkdir /usr/share/vim/vim80/ \
-    && sudo cp -fr /opt/vim/runtime/* /usr/share/vim/vim80/ \
-    && git clone https://github.com/zeroc0d3/vim-ide.git /opt/vim-ide \
-    && sudo /bin/sh /opt/vim-ide/step02.sh
-
-RUN git clone https://github.com/dracula/vim.git /opt/vim-themes/dracula \
-    && git clone https://github.com/blueshirts/darcula.git /opt/vim-themes/darcula \
-    && mkdir -p $HOME/.vim/bundle/vim-colors/colors \
-    && sudo cp /opt/vim-themes/dracula/colors/dracula.vim $HOME/.vim/bundle/vim-colors/colors/dracula.vim \
-    && sudo cp /opt/vim-themes/darcula/colors/darcula.vim $HOME/.vim/bundle/vim-colors/colors/darcula.vim
-
-#-----------------------------------------------------------------------------
 # Prepare Install Ruby
 # -) copy .zshrc to /root
 # -) copy .bashrc to /root
@@ -213,6 +193,107 @@ COPY ./rootfs/root/Gemfile.lock /opt/Gemfile.lock
 #-----------------------------------------------------------------------------
 COPY ./rootfs/root/gems.sh /opt/gems.sh
 RUN sudo /bin/sh /opt/gems.sh
+
+#-----------------------------------------------------------------------------
+# Install Python 3.5
+#-----------------------------------------------------------------------------
+RUN yum -y install https://centos7.iuscommunity.org/ius-release.rpm \
+    && yum -y update \
+    && yum -y install python35u python35u-libs python35u-devel python35u-pip 
+
+#-----------------------------------------------------------------------------
+# Install Python 2.7
+#-----------------------------------------------------------------------------
+RUN yum -y rpm-build \
+        redhat-rpm-config \
+        yum-utils \
+    && yum -y groupinstall "Development Tools" \
+    && sudo yum-builddep -y python-2.7.11-4.fc24.src.rpm \
+    && mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} \
+    && cd ~/rpmbuild/SRPMS \
+    && curl -O https://kojipkgs.fedoraproject.org//packages/python/2.7.11/4.fc24/src/python-2.7.11-4.fc24.src.rpm \
+    && cd ~/rpmbuild/SRPMS \
+    && rpmbuild --rebuild python-2.7.11-4.fc24.src.rpm \
+    && cd ~/rpmbuild/SPECS/ \
+    && sed -i -e "s/^%global run_selftest_suite 1/%global run_selftest_suite 0/g" python.spec  # OPTIONAL \
+    && rpmbuild -ba python.spec \
+    && cd ~/rpmbuild/SRPMS/ \
+    && rpmbuild --rebuild python2711-2.7.11-4.el7.centos.src.rpm \
+    && cd ~/rpmbuild/RPMS/ \
+    && sudo yum localinstall --nogpgcheck python-libs-2.7.11-4.el7.centos.x86_64.rpm python-2.7.11-4.el7.centos.x86_64.rpm
+
+#-----------------------------------------------------------------------------
+# Clean Up All Cache
+#-----------------------------------------------------------------------------
+RUN yum clean all
+
+#-----------------------------------------------------------------------------
+# Install Lua
+#-----------------------------------------------------------------------------
+RUN curl -L http://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz -o /opt/lua-${LUA_VERSION}.tar.gz \
+    && curl -L http://luarocks.github.io/luarocks/releases/luarocks-${LUAROCKS_VERSION}.tar.gz \
+         -o /opt/luarocks-${LUAROCKS_VERSION}.tar.gz
+
+RUN cd /opt \
+    && tar zxvf lua-${LUA_VERSION}.tar.gz \
+    && tar zxvf luarocks-${LUAROCKS_VERSION}.tar.gz \
+    && cd lua-${LUA_VERSION} \
+    && make linux \
+    && cd ../luarocks-${LUAROCKS_VERSION} \
+    && ./configure \
+    && make \
+    && sudo make install
+
+#-----------------------------------------------------------------------------
+# Download & Install
+# -) vim
+# -) vundle + themes
+#-----------------------------------------------------------------------------
+RUN cd /usr/local/src \
+#   && sudo rm -rf /usr/local/share/vim /usr/bin/vim \
+    && git clone https://github.com/vim/vim.git \
+    && cd vim \
+    && git checkout v${VIM_VERSION} \
+    && cd src \
+    && make autoconf \
+    && ./configure \
+            --prefix=/usr \
+            --enable-multibyte \
+            --enable-perlinterp=dynamic \
+            --enable-rubyinterp=dynamic \
+            --with-ruby-command=`which ruby` \
+            --enable-pythoninterp=dynamic \
+            --with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu \
+            --enable-python3interp \
+            --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
+            --enable-luainterp \
+            --with-luajit \
+            --with-lua-prefix=/usr/include/lua5.1 \
+            --enable-cscope \
+            --enable-gui=auto \
+            --with-features=huge \
+            --with-x \
+            --enable-fontset \
+            --enable-largefile \
+            --disable-netbeans \
+            --with-compiledby="ZeroC0D3 Team" \
+            --enable-fail-if-missing \
+    && make distclean \
+    && make \
+    && cp config.mk.dist auto/config.mk \
+    && sudo make install \
+    && sudo mkdir -p /usr/share/vim \
+    && sudo mkdir -p /usr/share/vim/vim80/ \
+    && sudo cp -fr /usr/local/src/vim/runtime/* /usr/share/vim/vim80/
+
+RUN git clone https://github.com/zeroc0d3/vim-ide.git $HOME/vim-ide \
+    && sudo /bin/sh $HOME/vim-ide/step02.sh
+
+RUN git clone https://github.com/dracula/vim.git /opt/vim-themes/dracula \
+    && git clone https://github.com/blueshirts/darcula.git /opt/vim-themes/darcula \
+    && mkdir -p $HOME/.vim/bundle/vim-colors/colors \
+    && cp /opt/vim-themes/dracula/colors/dracula.vim $HOME/.vim/bundle/vim-colors/colors/dracula.vim \
+    && cp /opt/vim-themes/darcula/colors/darcula.vim $HOME/.vim/bundle/vim-colors/colors/darcula.vim
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
@@ -259,6 +340,11 @@ RUN wget https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar -O /
 COPY ./rootfs/root/colors/24-bit-color.sh /opt/24-bit-color.sh
 RUN chmod a+x /opt/24-bit-color.sh; sync \
     && sudo /bin/sh /opt/24-bit-color.sh
+
+#-----------------------------------------------------------------------------
+# Set Configuration
+#-----------------------------------------------------------------------------
+COPY rootfs/ /
 
 #-----------------------------------------------------------------------------
 # Cleanup 'root' folder

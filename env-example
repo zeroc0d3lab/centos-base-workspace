@@ -6,7 +6,7 @@ DATA_SAVE=.data
 # ==============================================
 #   BASE (Environments)
 # ==============================================
-S6OVERLAY_VERSION=v1.21.0.2
+S6OVERLAY_VERSION=1.21.0.2
 S6_BEHAVIOUR_IF_STAGE2_FAILS=1
 LANG=en_US.UTF-8
 LC_ALL=en_US.UTF-8
@@ -16,7 +16,7 @@ TERM=xterm
 # ==============================================
 #   BASE-CONSUL (Environments)
 # ==============================================
-BASE_CONSUL_PORT=1234
+BASE_CONSUL_PORT=2220
 CONSULTEMPLATE_VERSION=0.19.3
 
 # ==============================================
@@ -32,6 +32,14 @@ COMPOSER_VERSION=1.5.2
 PATH_HOME=/home/docker
 PATH_WORKSPACE=/home/docker/workspace
 WORKSPACE_PORT=2222
+
+# ==============================================
+#   VIM
+# ==============================================
+VIM_VERSION=8.0.1207
+LUA_VERSION=5.3.4
+LUAROCKS_VERSION=2.4.3
+VIM_PORT=2224
 
 # ==============================================
 #  OPTIONAL ARGUMENTS
