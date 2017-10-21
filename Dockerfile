@@ -114,7 +114,7 @@ RUN rm -rf /root/.bash_it \
     && git clone https://github.com/Bash-it/bash-it.git /opt/.bash_it \
     && git clone https://github.com/speedenator/agnoster-bash.git /opt/.bash_it/themes/agnoster-bash \
     && git clone https://github.com/robbyrussell/oh-my-zsh.git /opt/.oh-my-zsh \
-    && git clone https://github.com/bhilburn/powerlevel9k.git /opt/.oh-my-zsh/custom/themes/powerlevel9k
+    && git clone https://github.com/bhilburn/powerlevel9k.git /opt/.oh-my-zsh/custom/themes/powerlevel9k \
     && cd /opt  \
     && tar zcvf bash_it.tar.gz .bash_it \
     && tar zcvf oh-my-zsh.tar.gz .oh-my-zsh \
