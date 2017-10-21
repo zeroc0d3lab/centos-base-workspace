@@ -285,8 +285,8 @@ RUN git clone https://github.com/vim/vim.git /root/vim \
     && sudo mkdir -p /usr/share/vim/vim80/ \
     && sudo cp -fr /root/vim/runtime/** /usr/share/vim/vim80/
 
-RUN git clone https://github.com/zeroc0d3/vim-ide.git $HOME/vim-ide \
-    && sudo /bin/sh $HOME/vim-ide/step02.sh
+RUN git clone https://github.com/zeroc0d3/vim-ide.git /root/vim-ide \
+    && sudo /bin/sh /root/vim-ide/step02.sh
 
 RUN git clone https://github.com/dracula/vim.git /opt/vim-themes/dracula \
     && git clone https://github.com/blueshirts/darcula.git /opt/vim-themes/darcula \
