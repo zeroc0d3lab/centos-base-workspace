@@ -204,23 +204,23 @@ RUN yum -y install https://centos7.iuscommunity.org/ius-release.rpm \
 #-----------------------------------------------------------------------------
 # Install Python 2.7
 #-----------------------------------------------------------------------------
-RUN yum -y rpm-build \
-        redhat-rpm-config \
-        yum-utils \
-    && yum -y groupinstall "Development Tools" \
-    && sudo yum-builddep -y python-2.7.11-4.fc24.src.rpm \
-    && mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} \
-    && cd ~/rpmbuild/SRPMS \
-    && curl -O https://kojipkgs.fedoraproject.org//packages/python/2.7.11/4.fc24/src/python-2.7.11-4.fc24.src.rpm \
-    && cd ~/rpmbuild/SRPMS \
-    && rpmbuild --rebuild python-2.7.11-4.fc24.src.rpm \
-    && cd ~/rpmbuild/SPECS/ \
-    && sed -i -e "s/^%global run_selftest_suite 1/%global run_selftest_suite 0/g" python.spec  # OPTIONAL \
-    && rpmbuild -ba python.spec \
-    && cd ~/rpmbuild/SRPMS/ \
-    && rpmbuild --rebuild python2711-2.7.11-4.el7.centos.src.rpm \
-    && cd ~/rpmbuild/RPMS/ \
-    && sudo yum localinstall --nogpgcheck python-libs-2.7.11-4.el7.centos.x86_64.rpm python-2.7.11-4.el7.centos.x86_64.rpm
+# RUN yum -y rpm-build \
+#         redhat-rpm-config \
+#         yum-utils \
+#     && yum -y groupinstall "Development Tools" \
+#     && sudo yum-builddep -y python-2.7.11-4.fc24.src.rpm \
+#     && mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} \
+#     && cd ~/rpmbuild/SRPMS \
+#     && curl -O https://kojipkgs.fedoraproject.org//packages/python/2.7.11/4.fc24/src/python-2.7.11-4.fc24.src.rpm \
+#     && cd ~/rpmbuild/SRPMS \
+#     && rpmbuild --rebuild python-2.7.11-4.fc24.src.rpm \
+#     && cd ~/rpmbuild/SPECS/ \
+#     && sed -i -e "s/^%global run_selftest_suite 1/%global run_selftest_suite 0/g" python.spec  # OPTIONAL \
+#     && rpmbuild -ba python.spec \
+#     && cd ~/rpmbuild/SRPMS/ \
+#     && rpmbuild --rebuild python2711-2.7.11-4.el7.centos.src.rpm \
+#     && cd ~/rpmbuild/RPMS/ \
+#     && sudo yum localinstall --nogpgcheck python-libs-2.7.11-4.el7.centos.x86_64.rpm python-2.7.11-4.el7.centos.x86_64.rpm
 
 #-----------------------------------------------------------------------------
 # Clean Up All Cache
@@ -244,15 +244,14 @@ RUN cd /opt \
     && make \
     && sudo make install
 
-#-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 # Download & Install
 # -) vim
 # -) vundle + themes
 #-----------------------------------------------------------------------------
-RUN cd /usr/local/src \
+RUN git clone https://github.com/vim/vim.git /root/vim \
 #   && sudo rm -rf /usr/local/share/vim /usr/bin/vim \
-    && git clone https://github.com/vim/vim.git \
-    && cd vim \
+    && cd /root/vim \
     && git checkout v${VIM_VERSION} \
     && cd src \
     && make autoconf \
@@ -284,16 +283,19 @@ RUN cd /usr/local/src \
     && sudo make install \
     && sudo mkdir -p /usr/share/vim \
     && sudo mkdir -p /usr/share/vim/vim80/ \
-    && sudo cp -fr /usr/local/src/vim/runtime/* /usr/share/vim/vim80/
+    && sudo cp -fr /root/vim/runtime/** /usr/share/vim/vim80/
 
 RUN git clone https://github.com/zeroc0d3/vim-ide.git $HOME/vim-ide \
     && sudo /bin/sh $HOME/vim-ide/step02.sh
 
 RUN git clone https://github.com/dracula/vim.git /opt/vim-themes/dracula \
     && git clone https://github.com/blueshirts/darcula.git /opt/vim-themes/darcula \
-    && mkdir -p $HOME/.vim/bundle/vim-colors/colors \
-    && cp /opt/vim-themes/dracula/colors/dracula.vim $HOME/.vim/bundle/vim-colors/colors/dracula.vim \
-    && cp /opt/vim-themes/darcula/colors/darcula.vim $HOME/.vim/bundle/vim-colors/colors/darcula.vim
+    && mkdir -p /root/.vim/bundle/vim-colors/colors \
+    && cp /opt/vim-themes/dracula/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
+    && cp /opt/vim-themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
+
+RUN tar zcvf vim.tar.gz /root/vim /root/.vim \
+    && mv vim.tar.gz /opt
 
 #-----------------------------------------------------------------------------
 # Install Javascipt Unit Test
