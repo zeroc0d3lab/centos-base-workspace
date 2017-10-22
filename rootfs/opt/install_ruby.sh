@@ -2,6 +2,7 @@
 
 DATE=`date '+%Y-%m-%d %H:%M:%S'`
 DEFAULT_VERSION='2.4.2'
+DEFAULT_PACKAGE='rbenv'
 
 logo() {
   echo "--------------------------------------------------------------------------"
@@ -18,7 +19,18 @@ logo() {
 check_version() {
   if [ "${RUBY_VERSION}" = "" ]
   then
-    ${RUBY_VERSION} = $DEFAULT_VERSION
+    INSTALL_VERSION = $DEFAULT_VERSION
+  else
+    INSTALL_VERSION = ${RUBY_VERSION}   
+  fi
+}
+
+check_ruby_package() {
+  if [ "${RUBY_VERSION}" = "" ]
+  then
+    INSTALL_PACKAGE = $DEFAULT_PACKAGE
+  else
+    INSTALL_PACKAGE = ${RUBY_PACKAGE}   
   fi
 }
 
@@ -31,7 +43,7 @@ load_env() {
 }
 
 install_ruby() {
-  if [ "${RUBY_PACKAGE}" = "rbenv" ]
+  if [ "$INSTALL_PACKAGE" = "rbenv" ]
   then
     #-----------------------------------------------------------------------------
     # Install Ruby with rbenv (default)
@@ -39,8 +51,8 @@ install_ruby() {
     git clone https://github.com/rbenv/rbenv.git $HOME/.rbenv \
     && git clone https://github.com/rbenv/ruby-build.git $HOME/.rbenv/plugins/ruby-build \
     && exec $SHELL \
-    && $HOME/.rbenv/bin/rbenv install ${RUBY_VERSION} \
-    && $HOME/.rbenv/bin/rbenv global ${RUBY_VERSION} \
+    && $HOME/.rbenv/bin/rbenv install $INSTALL_VERSION \
+    && $HOME/.rbenv/bin/rbenv global $INSTALL_VERSION \
     && $HOME/.rbenv/bin/rbenv rehash \
     && $HOME/.rbenv/shims/ruby -v
   else
@@ -52,8 +64,8 @@ install_ruby() {
     && sudo usermod -a -G rvm root \
     && sudo usermod -a -G rvm docker \
     && source ~/.bashrc \
-    && /usr/local/rvm/bin/rvm install ${RUBY_VERSION} \
-    && /usr/local/rvm/bin/rvm use ${RUBY_VERSION} --default \
+    && /usr/local/rvm/bin/rvm install $INSTALL_VERSION \
+    && /usr/local/rvm/bin/rvm use $INSTALL_VERSION --default \
     && /usr/bin/ruby -v
   fi
 }
@@ -82,7 +94,8 @@ install_bundle() {
 
 main() {
   logo
-  #check_version
+  check_version
+  check_ruby_package
   install_ruby
   load_env
   check
