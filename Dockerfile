@@ -244,7 +244,7 @@ RUN cd /opt \
     && make \
     && sudo make install
 
------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # Download & Install
 # -) vim
 # -) vundle + themes
@@ -256,9 +256,9 @@ RUN git clone https://github.com/vim/vim.git /root/vim \
     && cd src \
     && make autoconf \
     && ./configure \
-            --prefix=/usr \
-            --enable-multibyte \
-            --enable-perlinterp=dynamic \
+#           --prefix=/usr \
+#           --enable-multibyte \
+#           --enable-perlinterp=dynamic \
 #           --enable-rubyinterp=dynamic \
 #           --with-ruby-command=`which ruby` \
 #           --enable-pythoninterp=dynamic \
@@ -268,15 +268,15 @@ RUN git clone https://github.com/vim/vim.git /root/vim \
 #           --enable-luainterp \
 #           --with-luajit \
 #           --with-lua-prefix=/usr/include/lua5.1 \
-            --enable-cscope \
-            --enable-gui=auto \
-            --with-features=huge \
-            --with-x \
-            --enable-fontset \
-            --enable-largefile \
-            --disable-netbeans \
-            --with-compiledby="ZeroC0D3 Team" \
-            --enable-fail-if-missing \
+#           --enable-cscope \
+#           --enable-gui=auto \
+#           --with-features=huge \
+#           --with-x \
+#           --enable-fontset \
+#           --enable-largefile \
+#           --disable-netbeans \
+#           --with-compiledby="ZeroC0D3 Team" \
+#           --enable-fail-if-missing \
     && make distclean \
     && make \
     && cp config.mk.dist auto/config.mk \
