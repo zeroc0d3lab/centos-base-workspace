@@ -3,6 +3,8 @@
 DATE=`date '+%Y-%m-%d %H:%M:%S'`
 DEFAULT_VERSION='2.4.2'
 DEFAULT_PACKAGE='rbenv'
+INSTALL_VERSION=$DEFAULT_VERSION
+INSTALL_PACKAGE=$DEFAULT_PACKAGE
 
 logo() {
   echo "--------------------------------------------------------------------------"
@@ -17,20 +19,16 @@ logo() {
 }
 
 check_version() {
-  if [ "${RUBY_VERSION}" = "" ]
+  if [ "${RUBY_VERSION}" != "" ]
   then
-    INSTALL_VERSION = $DEFAULT_VERSION
-  else
-    INSTALL_VERSION = ${RUBY_VERSION}   
+    INSTALL_VERSION=${RUBY_VERSION}   
   fi
 }
 
 check_ruby_package() {
-  if [ "${RUBY_VERSION}" = "" ]
+  if [ "${RUBY_VERSION}" != "" ]
   then
-    INSTALL_PACKAGE = $DEFAULT_PACKAGE
-  else
-    INSTALL_PACKAGE = ${RUBY_PACKAGE}   
+    INSTALL_PACKAGE=${RUBY_PACKAGE}   
   fi
 }
 
@@ -38,11 +36,19 @@ load_env() {
   echo "--------------------------------------------------------------------------"
   echo "## Load Environment: "
   echo "   $HOME/.bashrc"
-  source ~/.bashrc
+  echo ""
+# source ~/.bashrc
   exec $SHELL
 }
 
 install_ruby() {
+  echo "--------------------------------------------------------------------------"
+  echo "## Install Ruby Version: " 
+  echo "   $INSTALL_VERSION"
+  echo "## Using Ruby Package: "
+  echo "   $INSTALL_PACKAGE"
+  echo ""
+
   if [ "$INSTALL_PACKAGE" = "rbenv" ]
   then
     #-----------------------------------------------------------------------------
@@ -76,19 +82,21 @@ check(){
   RUBY=`which ruby`
   RUBY_V=`$RUBY -v`
   echo "   $RUBY_V"
-  echo "--------------------------------------------------------------------------"
+  echo ""
   echo "## Path Ruby: "
   echo "   $RUBY"
-  echo "--------------------------------------------------------------------------"
+  echo ""
   echo "## Path Gem: "
   GEM=`which gem`
   echo "   $GEM"
+  echo ""
 }
 
 install_bundle() {
   echo "--------------------------------------------------------------------------"
   echo "## Install Bundle: "
   echo "   $GEM install bundle"
+  echo ""
   $GEM install bundle
 }
 
