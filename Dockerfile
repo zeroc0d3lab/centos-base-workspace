@@ -249,7 +249,8 @@ RUN cd /opt \
 # -) vim
 # -) vundle + themes
 #-----------------------------------------------------------------------------
-RUN git clone https://github.com/vim/vim.git /root/vim \
+RUN rm -rf /root/vim \
+    && git clone https://github.com/vim/vim.git /root/vim \
 #   && sudo rm -rf /usr/local/share/vim /usr/bin/vim \
     && cd /root/vim \
     && git checkout v${VIM_VERSION} \
