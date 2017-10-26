@@ -176,23 +176,16 @@ RUN git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git /
 # -) copy .zshrc to /root
 # -) copy .bashrc to /root
 #-----------------------------------------------------------------------------
+RUN git clone https://github.com/zeroc0d3/ruby-installation /opt/ruby_installer 
+
 COPY ./rootfs/root/.zshrc /root/.zshrc
 COPY ./rootfs/root/.bashrc /root/.bashrc
-COPY ./rootfs/opt/ruby.sh /etc/profile.d/ruby.sh
-COPY ./rootfs/opt/install_ruby.sh /opt/install_ruby.sh
-RUN sudo /bin/sh /opt/install_ruby.sh
-
-#-----------------------------------------------------------------------------
-# Copy package dependencies in Gemfile
-#-----------------------------------------------------------------------------
-COPY ./rootfs/root/Gemfile /opt/Gemfile
-COPY ./rootfs/root/Gemfile.lock /opt/Gemfile.lock
+RUN sudo /bin/sh /opt/ruby_installer/install_ruby.sh
 
 #-----------------------------------------------------------------------------
 # Install Ruby Packages (rbenv/rvm)
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/gems.sh /opt/gems.sh
-RUN sudo /bin/sh /opt/gems.sh
+RUN sudo /bin/sh /opt/ruby_installer/gems.sh
 
 #-----------------------------------------------------------------------------
 # Install Python 3.5
@@ -228,6 +221,16 @@ RUN yum -y install https://centos7.iuscommunity.org/ius-release.rpm \
 RUN yum clean all
 
 #-----------------------------------------------------------------------------
+# Download & Install
+# -) lua
+# -) luarocks
+# -) vim
+# -) vundle + themes
+#-----------------------------------------------------------------------------
+COPY ./rootfs/opt/install_vim.sh /opt/install_vim.sh
+# RUN sudo /bin/sh /opt/install_vim.sh
+
+#-----------------------------------------------------------------------------
 # Install Lua
 #-----------------------------------------------------------------------------
 RUN curl -L http://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz -o /opt/lua-${LUA_VERSION}.tar.gz \
@@ -243,7 +246,7 @@ RUN cd /opt \
     && ./configure \
     && make \
     && sudo make install
-
+    
 #-----------------------------------------------------------------------------
 # Download & Install
 # -) vim
@@ -251,33 +254,11 @@ RUN cd /opt \
 #-----------------------------------------------------------------------------
 RUN rm -rf /root/vim \
     && git clone https://github.com/vim/vim.git /root/vim \
-#   && sudo rm -rf /usr/local/share/vim /usr/bin/vim \
     && cd /root/vim \
     && git checkout v${VIM_VERSION} \
     && cd src \
     && make autoconf \
     && ./configure \
-#           --prefix=/usr \
-#           --enable-multibyte \
-#           --enable-perlinterp=dynamic \
-#           --enable-rubyinterp=dynamic \
-#           --with-ruby-command=`which ruby` \
-#           --enable-pythoninterp=dynamic \
-#           --with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu \
-#           --enable-python3interp \
-#           --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
-#           --enable-luainterp \
-#           --with-luajit \
-#           --with-lua-prefix=/usr/include/lua5.1 \
-#           --enable-cscope \
-#           --enable-gui=auto \
-#           --with-features=huge \
-#           --with-x \
-#           --enable-fontset \
-#           --enable-largefile \
-#           --disable-netbeans \
-#           --with-compiledby="ZeroC0D3 Team" \
-#           --enable-fail-if-missing \
     && make distclean \
     && make \
     && cp config.mk.dist auto/config.mk \
@@ -286,8 +267,7 @@ RUN rm -rf /root/vim \
     && sudo mkdir -p /usr/share/vim/vim80/ \
     && sudo cp -fr /root/vim/runtime/** /usr/share/vim/vim80/
 
-RUN git clone https://github.com/zeroc0d3/vim-ide.git /root/vim-ide \
-    && sudo /bin/sh /root/vim-ide/step02.sh
+RUN curl -sSL https://raw.githubusercontent.com/zeroc0d3/vim-ide/master/step02.sh | sudo bash -s
 
 RUN git clone https://github.com/dracula/vim.git /opt/vim-themes/dracula \
     && git clone https://github.com/blueshirts/darcula.git /opt/vim-themes/darcula \
@@ -352,7 +332,10 @@ COPY rootfs/ /
 #-----------------------------------------------------------------------------
 # Cleanup 'root' folder
 #-----------------------------------------------------------------------------
-RUN rm -f /root/*.tar.gz
+RUN rm -f /root/*.tar.gz \
+    && rm -f /root/*.zip \
+    && rm -f /opt/*.tar.gz \
+    && rm -f /opt/*.zip
 
 #-----------------------------------------------------------------------------
 # Set PORT Docker Container

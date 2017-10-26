@@ -13,6 +13,9 @@ export PATH="$HOME/bin:/usr/local/bin:$PATH:$HOME/.local/bin:$PATH"
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
+# Path xterm-256-color
+export TERM="xterm-256color"
+
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
@@ -115,16 +118,5 @@ else
 
     # Set PATH alternatives using this:
     [[ -s "$RVM_ROOT/scripts/rvm"  ]] && source "$RVM_ROOT/scripts/rvm"
-
-    ### rvm selector ###
-    # function gemdir {
-    #   if [[ -z "$1" ]] ; then
-    #     echo "gemdir expects a parameter, which should be a valid RVM Ruby selector"
-    #   else
-    #     rvm "$1"
-    #     cd $(rvm gemdir)
-    #     pwd
-    #   fi
-    # }
   fi 
 fi
