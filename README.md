@@ -24,7 +24,7 @@ This docker image includes:
   - [X] grunt
   - [X] gulp
   - [X] yeoman
-* composer
+* composer (dependency manager for PHP)
 
 ## Notes:
 * Run vim then
