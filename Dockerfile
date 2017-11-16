@@ -269,10 +269,14 @@ RUN /usr/bin/npm install --global yarn \
 #-----------------------------------------------------------------------------
 # Upgrade Javascipt Packages Manager
 #-----------------------------------------------------------------------------
-RUN /usr/bin/npm upgrade --global yarn \
+RUN /usr/bin/npm upgrade --global chai \
+    && /usr/bin/npm upgrade --global tv4 \
+    && /usr/bin/npm upgrade --global newman \
+    && /usr/bin/npm upgrade --global yarn \
     && /usr/bin/npm upgrade --global bower \
     && /usr/bin/npm upgrade --global grunt \
-    && /usr/bin/npm upgrade --global gulp 
+    && /usr/bin/npm upgrade --global gulp \
+    && /usr/bin/npm upgrade --global yo
 
 #-----------------------------------------------------------------------------
 # Move 'node_modules' To 'root' Folder
