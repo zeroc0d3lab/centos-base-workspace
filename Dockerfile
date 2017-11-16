@@ -272,8 +272,7 @@ RUN /usr/bin/npm install --global yarn \
 RUN /usr/bin/npm upgrade --global yarn \
     && /usr/bin/npm upgrade --global bower \
     && /usr/bin/npm upgrade --global grunt \
-    && /usr/bin/npm upgrade --global gulp \
-    && /usr/bin/npm upgrade --global yo
+    && /usr/bin/npm upgrade --global gulp 
 
 #-----------------------------------------------------------------------------
 # Move 'node_modules' To 'root' Folder
