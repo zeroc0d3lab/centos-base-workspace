@@ -279,11 +279,6 @@ RUN /usr/bin/npm upgrade --global chai \
     && /usr/bin/npm upgrade --global yo
 
 #-----------------------------------------------------------------------------
-# Move 'node_modules' To 'root' Folder
-#-----------------------------------------------------------------------------
-RUN mv /node_modules $HOME/node_modules
-
-#-----------------------------------------------------------------------------
 # Install Composer PHP Packages Manager
 #-----------------------------------------------------------------------------
 RUN wget https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar -O /usr/local/bin/composer \
